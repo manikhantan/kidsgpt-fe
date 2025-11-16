@@ -40,6 +40,7 @@ const ChildrenList = () => {
       await deleteChild(deleteConfirmId).unwrap();
       refetch();
       setDeleteConfirmId(null);
+      await refetch();
     } catch (err) {
       console.error('Failed to delete child:', err);
     }
