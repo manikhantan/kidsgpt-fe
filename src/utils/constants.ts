@@ -13,7 +13,6 @@ export const ROUTES = {
   PARENT_CONTENT_CONTROL: '/parent/content-control',
   PARENT_CHAT_HISTORY: '/parent/chat-history',
   PARENT_CHILDREN: '/parent/children',
-  PARENT_CHAT: '/parent/chat',
   KID_CHAT: '/kid/chat',
 } as const;
 

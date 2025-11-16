@@ -13,7 +13,6 @@ const ParentDashboardPage = lazy(() => import('@/pages/parent/ParentDashboardPag
 const ContentControlPage = lazy(() => import('@/pages/parent/ContentControlPage'));
 const ChatHistoryPage = lazy(() => import('@/pages/parent/ChatHistoryPage'));
 const ChildManagementPage = lazy(() => import('@/pages/parent/ChildManagementPage'));
-const ParentChatPage = lazy(() => import('@/pages/parent/ParentChatPage'));
 const KidChatPage = lazy(() => import('@/pages/kid/KidChatPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 
@@ -48,7 +47,6 @@ const App = () => {
                     <Route path="content-control" element={<ContentControlPage />} />
                     <Route path="chat-history" element={<ChatHistoryPage />} />
                     <Route path="children" element={<ChildManagementPage />} />
-                    <Route path="chat" element={<ParentChatPage />} />
                     <Route
                       path="*"
                       element={<Navigate to={ROUTES.PARENT_DASHBOARD} replace />}
@@ -64,15 +62,13 @@ const App = () => {
             path="/kid/*"
             element={
               <ProtectedRoute allowedRoles={['kid']}>
-                <Layout>
-                  <Routes>
-                    <Route path="chat" element={<KidChatPage />} />
-                    <Route
-                      path="*"
-                      element={<Navigate to={ROUTES.KID_CHAT} replace />}
-                    />
-                  </Routes>
-                </Layout>
+                <Routes>
+                  <Route path="chat" element={<KidChatPage />} />
+                  <Route
+                    path="*"
+                    element={<Navigate to={ROUTES.KID_CHAT} replace />}
+                  />
+                </Routes>
               </ProtectedRoute>
             }
           />
