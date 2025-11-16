@@ -27,6 +27,7 @@ const ChildrenList = () => {
       setFormError(null);
       const { confirmPassword: _, ...createData } = data;
       await createChild(createData).unwrap();
+      await refetch();
       setIsModalOpen(false);
     } catch (err) {
       setFormError('Failed to create child account. Email may already exist.');
@@ -37,6 +38,7 @@ const ChildrenList = () => {
     if (!deleteConfirmId) return;
     try {
       await deleteChild(deleteConfirmId).unwrap();
+      await refetch();
       setDeleteConfirmId(null);
     } catch (err) {
       console.error('Failed to delete child:', err);
