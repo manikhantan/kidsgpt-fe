@@ -48,7 +48,7 @@ export const apiSlice = createApi({
       }),
     }),
 
-    kidLogin: builder.mutation<AuthResponse, { username: string; password: string }>({
+    kidLogin: builder.mutation<AuthResponse, { email: string; password: string }>({
       query: (data) => ({
         url: '/api/auth/kid/login',
         method: 'POST',
