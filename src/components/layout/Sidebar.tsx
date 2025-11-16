@@ -1,15 +1,16 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, Users, Shield, History, X } from 'lucide-react';
+import { LayoutDashboard, Users, Shield, History, X, MessageCircle } from 'lucide-react';
 import { clsx } from 'clsx';
 import Button from '@/components/shared/Button';
 import { ROUTES } from '@/utils/constants';
+import { useAuth } from '@/hooks/useAuth';
 
 interface SidebarProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
-const navItems = [
+const parentNavItems = [
   {
     to: ROUTES.PARENT_DASHBOARD,
     icon: LayoutDashboard,
@@ -18,7 +19,7 @@ const navItems = [
   {
     to: ROUTES.PARENT_CHILDREN,
     icon: Users,
-    label: 'Children',
+    label: 'Manage Children',
   },
   {
     to: ROUTES.PARENT_CONTENT_CONTROL,
@@ -30,9 +31,24 @@ const navItems = [
     icon: History,
     label: 'Chat History',
   },
+  {
+    to: ROUTES.PARENT_CHAT,
+    icon: MessageCircle,
+    label: 'Chat',
+  },
+];
+
+const kidNavItems = [
+  {
+    to: ROUTES.KID_CHAT,
+    icon: MessageCircle,
+    label: 'Chat',
+  },
 ];
 
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
+  const { isParent } = useAuth();
+  const navItems = isParent ? parentNavItems : kidNavItems;
   return (
     <>
       {isOpen && (

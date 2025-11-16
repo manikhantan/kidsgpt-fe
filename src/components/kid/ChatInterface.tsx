@@ -1,19 +1,14 @@
 import { useState, useEffect } from 'react';
-import { LogOut, Shield } from 'lucide-react';
 import MessageList from './MessageList';
 import ChatInput from './ChatInput';
 import BlockedNotification from './BlockedNotification';
-import Button from '@/components/shared/Button';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import { useAuth } from '@/hooks/useAuth';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { addMessage, setChatLoading } from '@/store/slices/chatSlice';
 import { useSendMessageMutation, useGetKidChatHistoryQuery } from '@/store/api/apiSlice';
 import { Message } from '@/types';
-import { APP_NAME } from '@/utils/constants';
 
 const ChatInterface = () => {
-  const { user, logout } = useAuth();
   const dispatch = useAppDispatch();
   const { messages, loading: chatLoading } = useAppSelector((state) => state.chat);
   const [sendMessage] = useSendMessageMutation();
@@ -81,36 +76,14 @@ const ChatInterface = () => {
 
   if (loadingHistory) {
     return (
-      <div className="flex items-center justify-center h-screen bg-gradient-to-br from-yellow-50 to-orange-50">
+      <div className="flex items-center justify-center h-full bg-gradient-to-br from-yellow-50 to-orange-50">
         <LoadingSpinner size="lg" text="Loading your chats..." />
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col h-screen bg-gray-50">
-      <header className="bg-white border-b border-gray-200 px-4 py-3 flex-shrink-0">
-        <div className="flex items-center justify-between max-w-4xl mx-auto">
-          <div className="flex items-center gap-2">
-            <Shield className="h-6 w-6 text-primary-600" />
-            <span className="text-xl font-bold text-gray-900">{APP_NAME}</span>
-          </div>
-          <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-600">
-              Hi, <span className="font-medium text-primary-600">{user?.name}</span>!
-            </span>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={logout}
-              leftIcon={<LogOut className="h-4 w-4" />}
-            >
-              Logout
-            </Button>
-          </div>
-        </div>
-      </header>
-
+    <div className="flex flex-col h-full bg-gray-50">
       <div className="flex-1 flex flex-col min-h-0">
         <MessageList messages={messages} />
 
