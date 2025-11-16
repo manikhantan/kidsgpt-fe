@@ -110,6 +110,14 @@ export const apiSlice = createApi({
       providesTags: (_result, _error, childId) => [{ type: 'Analytics', id: childId }],
     }),
 
+    sendParentMessage: builder.mutation<SendMessageResponse, string>({
+      query: (message) => ({
+        url: '/api/parent/chat',
+        method: 'POST',
+        body: { message },
+      }),
+    }),
+
     // Kid endpoints
     sendMessage: builder.mutation<SendMessageResponse, string>({
       query: (message) => ({
@@ -143,6 +151,7 @@ export const {
   useUpdateContentRulesMutation,
   useGetChatHistoryQuery,
   useGetAnalyticsQuery,
+  useSendParentMessageMutation,
   useSendMessageMutation,
   useGetKidChatHistoryQuery,
   useGetCurrentSessionQuery,
