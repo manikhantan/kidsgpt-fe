@@ -50,6 +50,10 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const user = useAppSelector((state) => state.auth.user);
   const isParent = user?.role === 'parent';
   const navItems = isParent ? parentNavItems : kidNavItems;
+
+  // Debug log - remove after testing
+  console.log('Sidebar user:', user, 'isParent:', isParent, 'role:', user?.role);
+
   return (
     <>
       {isOpen && (
