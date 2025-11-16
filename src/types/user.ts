@@ -16,9 +16,8 @@ export interface ParentUser extends User {
 
 export interface KidUser extends User {
   role: 'kid';
-  parentId: string;
   email: string;
-  username?: string;
+  parentId: string;
 }
 
 export interface AuthState {
