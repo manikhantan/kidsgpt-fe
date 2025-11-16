@@ -10,7 +10,6 @@ export interface Child {
 export interface CreateChildData {
   name: string;
   email: string;
-  username: string;
   password: string;
 }
 

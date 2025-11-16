@@ -1,6 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { User, Lock, AtSign, Mail } from 'lucide-react';
+import { User, Lock, Mail } from 'lucide-react';
 import Input from '@/components/shared/Input';
 import Button from '@/components/shared/Button';
 import { createChildSchema, CreateChildFormData } from '@/utils/validators';
@@ -54,18 +54,6 @@ const CreateChildForm = ({
           label="Child's Email"
           placeholder="Enter child's email"
           error={errors.email?.message}
-          className="pl-10"
-        />
-      </div>
-
-      <div className="relative">
-        <AtSign className="absolute left-3 top-9 h-5 w-5 text-gray-400" />
-        <Input
-          {...register('username')}
-          type="text"
-          label="Username"
-          placeholder="Create a username"
-          error={errors.username?.message}
           helperText="This will be used for login"
           className="pl-10"
         />

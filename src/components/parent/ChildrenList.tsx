@@ -29,7 +29,7 @@ const ChildrenList = () => {
       await createChild(createData).unwrap();
       setIsModalOpen(false);
     } catch (err) {
-      setFormError('Failed to create child account. Username may already exist.');
+      setFormError('Failed to create child account. Email may already exist.');
     }
   };
 
