@@ -42,7 +42,7 @@ const KidLoginPage = () => {
         </div>
 
         <LoginForm
-          type="kid"
+          type="child"
           onSubmit={handleSubmit}
           isLoading={isLoading}
           error={error}
