@@ -3,6 +3,7 @@ import MessageList from './MessageList';
 import ChatInput from './ChatInput';
 import BlockedNotification from './BlockedNotification';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
+import ErrorMessage from '@/components/shared/ErrorMessage';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { addMessage, setChatLoading } from '@/store/slices/chatSlice';
 import { useSendMessageMutation, useGetKidChatHistoryQuery } from '@/store/api/apiSlice';
@@ -17,7 +18,7 @@ const ChatInterface = () => {
     allowedTopics: string[];
   }>({ show: false, allowedTopics: [] });
 
-  const { data: chatHistory, isLoading: loadingHistory } = useGetKidChatHistoryQuery();
+  const { data: chatHistory, isLoading: loadingHistory, error: historyError, refetch } = useGetKidChatHistoryQuery();
 
   useEffect(() => {
     if (chatHistory?.sessions && chatHistory.sessions.length > 0) {
@@ -78,6 +79,17 @@ const ChatInterface = () => {
     return (
       <div className="flex items-center justify-center h-full bg-gradient-to-br from-yellow-50 to-orange-50">
         <LoadingSpinner size="lg" text="Loading your chats..." />
+      </div>
+    );
+  }
+
+  if (historyError) {
+    return (
+      <div className="flex items-center justify-center flex-1 bg-gradient-to-br from-yellow-50 to-orange-50 p-4">
+        <ErrorMessage
+          message="Oops! We couldn't load your chats. Please try again!"
+          onRetry={refetch}
+        />
       </div>
     );
   }

@@ -39,7 +39,7 @@ export const useAuth = () => {
   }, [dispatch, navigate]);
 
   const isParent = user?.role === 'parent';
-  const isKid = user?.role === 'kid';
+  const isKid = user?.role === 'child';
 
   return {
     user,

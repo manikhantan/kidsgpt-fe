@@ -14,7 +14,7 @@ const KidLoginPage = () => {
   const { login, isAuthenticated, user } = useAuth();
 
   if (isAuthenticated && user) {
-    if (user.role === 'kid') {
+    if (user.role === 'child') {
       return <Navigate to={ROUTES.KID_CHAT} replace />;
     }
     return <Navigate to={ROUTES.PARENT_DASHBOARD} replace />;
