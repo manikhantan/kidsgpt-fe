@@ -64,7 +64,7 @@ const App = () => {
           <Route
             path="/kid/*"
             element={
-              <ProtectedRoute allowedRoles={['kid']}>
+              <ProtectedRoute allowedRoles={['child']}>
                 <Layout>
                   <Routes>
                     <Route path="chat" element={<KidChatPage />} />

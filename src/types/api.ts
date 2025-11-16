@@ -23,7 +23,7 @@ export interface AuthResponse {
   user: {
     id: string;
     name: string;
-    role: 'parent' | 'kid';
+    role: 'parent' | 'child';
     email?: string;
     parentId?: string;
     username?: string;

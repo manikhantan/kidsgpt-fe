@@ -1,4 +1,4 @@
-export type UserRole = 'parent' | 'kid';
+export type UserRole = 'parent' | 'child';
 
 export interface User {
   id: string;
@@ -15,7 +15,7 @@ export interface ParentUser extends User {
 }
 
 export interface KidUser extends User {
-  role: 'kid';
+  role: 'child';
   email: string;
   parentId: string;
 }
