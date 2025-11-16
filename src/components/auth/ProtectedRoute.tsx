@@ -14,7 +14,10 @@ const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
   const location = useLocation();
   const { isAuthenticated, user, loading } = useAppSelector((state) => state.auth);
 
+  console.log('ProtectedRoute:', { isAuthenticated, user, loading, allowedRoles, path: location.pathname });
+
   if (loading) {
+    console.log('ProtectedRoute: showing loading spinner');
     return (
       <div className="min-h-screen flex items-center justify-center">
         <LoadingSpinner size="lg" text="Loading..." />
@@ -23,6 +26,7 @@ const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
   }
 
   if (!isAuthenticated || !user) {
+    console.log('ProtectedRoute: redirecting to login - not authenticated');
     return (
       <Navigate
         to={ROUTES.PARENT_LOGIN}
@@ -33,6 +37,7 @@ const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
   }
 
   if (!allowedRoles.includes(user.role)) {
+    console.log('ProtectedRoute: redirecting - role mismatch', { userRole: user.role, allowedRoles });
     if (user.role === 'parent') {
       return <Navigate to={ROUTES.PARENT_DASHBOARD} replace />;
     } else {
@@ -40,6 +45,7 @@ const ProtectedRoute = ({ children, allowedRoles }: ProtectedRouteProps) => {
     }
   }
 
+  console.log('ProtectedRoute: rendering children');
   return <>{children}</>;
 };
 
