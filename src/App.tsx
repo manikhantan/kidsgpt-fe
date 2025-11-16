@@ -24,7 +24,6 @@ const PageLoader = () => (
 );
 
 const App = () => {
-  console.log('App rendering');
   return (
     <BrowserRouter>
       <Suspense fallback={<PageLoader />}>
