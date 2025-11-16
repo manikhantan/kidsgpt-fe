@@ -45,6 +45,7 @@ export const kidLoginSchema = z.object({
 
 export const createChildSchema = z.object({
   name: nameSchema,
+  email: emailSchema,
   username: usernameSchema,
   password: passwordSchema,
   confirmPassword: z.string(),
