@@ -39,14 +39,13 @@ export const parentLoginSchema = z.object({
 });
 
 export const kidLoginSchema = z.object({
-  username: z.string().min(1, 'Username is required'),
+  email: emailSchema,
   password: z.string().min(1, 'Password is required'),
 });
 
 export const createChildSchema = z.object({
   name: nameSchema,
   email: emailSchema,
-  username: usernameSchema,
   password: passwordSchema,
   confirmPassword: z.string(),
 }).refine((data) => data.password === data.confirmPassword, {

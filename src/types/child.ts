@@ -2,7 +2,7 @@ export interface Child {
   id: string;
   name: string;
   email: string;
-  username: string;
+  username?: string;
   parentId: string;
   createdAt: string;
   updatedAt: string;
@@ -11,7 +11,6 @@ export interface Child {
 export interface CreateChildData {
   name: string;
   email: string;
-  username: string;
   password: string;
 }
 

@@ -28,7 +28,7 @@ const ChildSelector = ({
         <option value="">Choose a child...</option>
         {children.map((child) => (
           <option key={child.id} value={child.id}>
-            {child.name} (@{child.username})
+            {child.name} ({child.email})
           </option>
         ))}
       </select>

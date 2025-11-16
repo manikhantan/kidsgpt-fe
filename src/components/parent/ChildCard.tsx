@@ -23,7 +23,7 @@ const ChildCard = ({ child, onDelete }: ChildCardProps) => {
           </div>
           <div>
             <h3 className="text-lg font-semibold text-gray-900">{child.name}</h3>
-            <p className="text-sm text-gray-500">@{child.username}</p>
+            <p className="text-sm text-gray-500">{child.email}</p>
           </div>
         </div>
       </div>

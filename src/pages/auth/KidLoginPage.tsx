@@ -26,7 +26,7 @@ const KidLoginPage = () => {
       const result = await kidLogin(data).unwrap();
       login(result.user, result.access_token);
     } catch (err) {
-      setError('Oops! That username or password is not right. Try again!');
+      setError('Oops! That email or password is not right. Try again!');
     }
   };
 
