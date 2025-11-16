@@ -3,7 +3,7 @@ import { LayoutDashboard, Users, Shield, History, X, MessageCircle } from 'lucid
 import { clsx } from 'clsx';
 import Button from '@/components/shared/Button';
 import { ROUTES } from '@/utils/constants';
-import { useAppSelector } from '@/store/hooks';
+import { useAuth } from '@/hooks/useAuth';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -47,8 +47,7 @@ const kidNavItems = [
 ];
 
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
-  const user = useAppSelector((state) => state.auth.user);
-  const isParent = user?.role === 'parent';
+  const { isParent } = useAuth();
   const navItems = isParent ? parentNavItems : kidNavItems;
   return (
     <>
