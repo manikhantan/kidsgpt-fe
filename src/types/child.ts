@@ -1,6 +1,7 @@
 export interface Child {
   id: string;
   name: string;
+  email: string;
   username: string;
   parentId: string;
   createdAt: string;
@@ -9,6 +10,7 @@ export interface Child {
 
 export interface CreateChildData {
   name: string;
+  email: string;
   username: string;
   password: string;
 }
