@@ -8,7 +8,6 @@ interface LayoutProps {
 
 const Layout = ({ children }: LayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  console.log('Layout rendering');
 
   return (
     <div className="h-screen bg-gray-50 flex flex-col overflow-hidden">

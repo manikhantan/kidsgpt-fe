@@ -10,7 +10,6 @@ import { useSendMessageMutation, useGetKidChatHistoryQuery } from '@/store/api/a
 import { Message } from '@/types';
 
 const ChatInterface = () => {
-  console.log('ChatInterface rendering');
   const dispatch = useAppDispatch();
   const { messages, loading: chatLoading } = useAppSelector((state) => state.chat);
   const [sendMessage] = useSendMessageMutation();
@@ -20,7 +19,6 @@ const ChatInterface = () => {
   }>({ show: false, allowedTopics: [] });
 
   const { data: chatHistory, isLoading: loadingHistory, error: historyError, refetch } = useGetKidChatHistoryQuery();
-  console.log('ChatInterface query state:', { chatHistory, loadingHistory, historyError });
 
   useEffect(() => {
     if (chatHistory?.sessions && chatHistory.sessions.length > 0) {

@@ -5,8 +5,6 @@ import { store } from '@/store';
 import App from './App';
 import '@/styles/index.css';
 
-console.log('main.tsx: Starting React app');
-
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <Provider store={store}>
@@ -14,5 +12,3 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     </Provider>
   </React.StrictMode>
 );
-
-console.log('main.tsx: React app rendered');
