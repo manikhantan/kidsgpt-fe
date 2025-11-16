@@ -18,7 +18,7 @@ type LoginFormProps =
       error?: string | null;
     }
   | {
-      type: 'kid';
+      type: 'child';
       onSubmit: (data: KidLoginFormData) => void;
       isLoading?: boolean;
       error?: string | null;
