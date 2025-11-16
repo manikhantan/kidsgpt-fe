@@ -27,7 +27,12 @@ const ChildrenList = () => {
       setFormError(null);
       const { confirmPassword: _, ...createData } = data;
       await createChild(createData).unwrap();
-      await refetch();
+      // Try to refetch, but don't fail if it errors - cache invalidation will handle it
+      try {
+        await refetch();
+      } catch {
+        // Refetch failed but creation succeeded - continue
+      }
       setIsModalOpen(false);
     } catch (err) {
       setFormError('Failed to create child account. Email may already exist.');
@@ -38,7 +43,12 @@ const ChildrenList = () => {
     if (!deleteConfirmId) return;
     try {
       await deleteChild(deleteConfirmId).unwrap();
-      await refetch();
+      // Try to refetch, but don't fail if it errors - cache invalidation will handle it
+      try {
+        await refetch();
+      } catch {
+        // Refetch failed but deletion succeeded - continue
+      }
       setDeleteConfirmId(null);
     } catch (err) {
       console.error('Failed to delete child:', err);
@@ -49,7 +59,8 @@ const ChildrenList = () => {
     return <LoadingSpinner size="lg" text="Loading children..." className="py-12" />;
   }
 
-  if (error) {
+  // Only show error if we have no data at all
+  if (error && !children) {
     return (
       <ErrorMessage
         message="Failed to load children. Please try again."
