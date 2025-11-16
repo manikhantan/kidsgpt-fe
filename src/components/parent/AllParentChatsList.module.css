@@ -1,0 +1,170 @@
+.loadingContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background-color: var(--color-bg-surface);
+}
+
+.errorContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    background-color: var(--color-bg-surface);
+    padding: 1rem;
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: var(--color-bg-app);
+}
+
+.header {
+    background-color: var(--color-bg-surface);
+    border-bottom: 1px solid var(--color-border);
+    padding: 0.75rem 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.headerLeft {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+}
+
+.emptyCard {
+    padding: 2rem;
+    text-align: center;
+    background-color: var(--color-bg-surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+}
+
+.emptyIcon {
+    width: 3rem;
+    height: 3rem;
+    color: var(--color-text-muted);
+    margin: 0 auto 1rem;
+}
+
+.emptyTitle {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.emptyText {
+    color: var(--color-text-secondary);
+    margin-bottom: 1rem;
+}
+
+.sessionsGrid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.sessionCard {
+    padding: 1rem;
+    cursor: pointer;
+    transition: box-shadow var(--transition-fast);
+    background-color: var(--color-bg-surface);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border);
+}
+
+.sessionCard:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--color-border-light);
+}
+
+.sessionContent {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+}
+
+.sessionIconWrapper {
+    padding: 0.5rem;
+    background-color: rgba(139, 92, 246, 0.1);
+    /* accent color with opacity */
+    border-radius: var(--radius-md);
+}
+
+.sessionIcon {
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--color-accent);
+}
+
+.sessionDetails {
+    flex: 1;
+    min-width: 0;
+}
+
+.sessionTitle {
+    font-size: 1rem;
+    font-weight: 500;
+    color: var(--color-text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.sessionPreview {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    margin-top: 0.25rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.sessionMeta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+.metaItem {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.metaIcon {
+    width: 0.75rem;
+    height: 0.75rem;
+}
+
+.loadingMore {
+    padding: 1rem 0;
+    text-align: center;
+}
+
+.endMessage {
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}

@@ -1,0 +1,190 @@
+.container {
+    width: 100%;
+    padding: 1.5rem 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    animation: slideIn 0.3s ease-out;
+}
+
+.containerUser {
+    background-color: transparent;
+}
+
+.containerAssistant {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.content {
+    max-width: 48rem;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: flex;
+    gap: 1.5rem;
+}
+
+.avatar {
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.avatarUser {
+    background-color: var(--color-bg-surface-hover);
+    color: var(--color-text-primary);
+}
+
+.avatarAssistant {
+    background-color: var(--color-accent);
+    color: white;
+    box-shadow: 0 0 15px var(--color-accent-glow);
+}
+
+.avatarBlocked {
+    background-color: var(--color-warning);
+    color: white;
+}
+
+.messageBody {
+    flex: 1;
+    min-width: 0;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.senderName {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.timestamp {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+}
+
+.text {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--color-text-primary);
+    white-space: pre-wrap;
+}
+
+.cursor {
+    display: inline-block;
+    width: 0.5rem;
+    height: 1rem;
+    background-color: var(--color-accent);
+    margin-left: 0.25rem;
+    animation: blink 1s step-end infinite;
+}
+
+.actions {
+    margin-top: 0.75rem;
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.container:hover .actions {
+    opacity: 1;
+}
+
+.copyButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.25rem 0.5rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.75rem;
+    color: var(--color-text-secondary);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.copyButton:hover {
+    background-color: var(--color-bg-surface-hover);
+    color: var(--color-text-primary);
+}
+
+.blockedWarning {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    background-color: rgba(245, 158, 11, 0.1);
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    border-radius: var(--radius-md);
+    margin-bottom: 1rem;
+    color: var(--color-warning);
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+/* Compact Mode */
+.compactContainer {
+    display: flex;
+    gap: 0.75rem;
+    padding: 0.75rem 0;
+}
+
+.compactContainerReverse {
+    flex-direction: row-reverse;
+}
+
+.compactAvatar {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-radius: var(--radius-sm);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+}
+
+.compactBody {
+    flex: 1;
+    min-width: 0;
+}
+
+.compactText {
+    font-size: 0.875rem;
+    color: var(--color-text-primary);
+    word-break: break-word;
+}
+
+.compactTime {
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-top: 0.25rem;
+    display: block;
+}

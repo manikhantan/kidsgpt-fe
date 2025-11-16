@@ -1,0 +1,65 @@
+.card {
+    transition: box-shadow var(--transition-normal);
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+}
+
+.header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+}
+
+.infoWrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.avatar {
+    background-color: var(--color-bg-surface-secondary);
+    padding: 0.75rem;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.avatarIcon {
+    width: 1.5rem;
+    height: 1.5rem;
+    color: var(--color-accent);
+}
+
+.name {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+}
+
+.email {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+}
+
+.meta {
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+}
+
+.metaIcon {
+    width: 1rem;
+    height: 1rem;
+}
+
+.actions {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+}
