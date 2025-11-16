@@ -28,7 +28,16 @@ export const formatRelativeTime = (dateString: string): string => {
  * Formats a timestamp for chat messages
  */
 export const formatMessageTime = (dateString: string): string => {
+  if (!dateString) {
+    return '';
+  }
+
   const date = new Date(dateString);
+
+  // Check if the date is valid
+  if (isNaN(date.getTime())) {
+    return '';
+  }
 
   if (isToday(date)) {
     return format(date, 'h:mm a');
