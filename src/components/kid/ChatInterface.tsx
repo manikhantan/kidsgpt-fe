@@ -48,15 +48,27 @@ const ChatInterface = () => {
   useEffect(() => {
     if (!currentSessionId && chatHistory?.sessions && chatHistory.sessions.length > 0 && !hasLoadedHistory.current) {
       hasLoadedHistory.current = true;
-      const lastSession = chatHistory.sessions[chatHistory.sessions.length - 1];
-      // Use setCurrentSession to atomically update session ID, title, and messages together
-      dispatch(
-        setCurrentSession({
-          id: lastSession.id,
-          title: lastSession.title || 'Chat',
-          messages: lastSession.messages,
-        })
-      );
+      // Get the most recent session - sessions are typically sorted newest first, so use first element
+      // If sorted oldest first, the last element would be most recent
+      const sessions = chatHistory.sessions;
+      // Try to find the session with the most recent lastMessageAt, or fall back to first session
+      const mostRecentSession = sessions.reduce((latest, session) => {
+        if (!latest) return session;
+        const latestDate = new Date(latest.lastMessageAt || latest.startedAt || 0);
+        const sessionDate = new Date(session.lastMessageAt || session.startedAt || 0);
+        return sessionDate > latestDate ? session : latest;
+      }, sessions[0]);
+
+      // Validate that the session has a valid ID before setting it
+      if (mostRecentSession && mostRecentSession.id && typeof mostRecentSession.id === 'string' && mostRecentSession.id.trim() !== '') {
+        dispatch(
+          setCurrentSession({
+            id: mostRecentSession.id,
+            title: mostRecentSession.title || 'Chat',
+            messages: mostRecentSession.messages || [],
+          })
+        );
+      }
     }
   }, [chatHistory, currentSessionId, dispatch]);
 
@@ -76,7 +88,10 @@ const ChatInterface = () => {
     try {
       // If no session exists, create one first
       let sessionId = currentSessionId;
-      if (!sessionId) {
+      // Validate sessionId is a non-empty string
+      const hasValidSession = sessionId && typeof sessionId === 'string' && sessionId.trim() !== '';
+
+      if (!hasValidSession) {
         const newSession = await createSession().unwrap();
         sessionId = newSession.id;
         // Use setCurrentSession to atomically update session and clear old messages
@@ -92,7 +107,7 @@ const ChatInterface = () => {
         dispatch(addMessage(userMessage));
       }
 
-      const response = await sendMessage({ message: content, sessionId: sessionId || undefined }).unwrap();
+      const response = await sendMessage({ message: content, sessionId: sessionId as string }).unwrap();
 
       if (response.blocked) {
         setBlockedInfo({
