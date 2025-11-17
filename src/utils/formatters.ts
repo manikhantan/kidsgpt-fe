@@ -4,7 +4,9 @@ import { format, formatDistanceToNow, isToday, isYesterday } from 'date-fns';
  * Formats a date string to a readable format
  */
 export const formatDate = (dateString: string): string => {
+  if (!dateString) return '';
   const date = new Date(dateString);
+  if (isNaN(date.getTime())) return '';
   return format(date, 'MMM d, yyyy');
 };
 
@@ -12,7 +14,9 @@ export const formatDate = (dateString: string): string => {
  * Formats a date string to include time
  */
 export const formatDateTime = (dateString: string): string => {
+  if (!dateString) return '';
   const date = new Date(dateString);
+  if (isNaN(date.getTime())) return '';
   return format(date, 'MMM d, yyyy h:mm a');
 };
 
@@ -20,9 +24,20 @@ export const formatDateTime = (dateString: string): string => {
  * Formats a date as relative time (e.g., "2 hours ago")
  */
 export const formatRelativeTime = (dateString: string): string => {
+  if (!dateString) {
+    return '';
+  }
+
   const date = new Date(dateString);
+
+  // Check if the date is valid
+  if (isNaN(date.getTime())) {
+    return '';
+  }
+
   return formatDistanceToNow(date, { addSuffix: true });
 };
+
 
 /**
  * Formats a timestamp for chat messages
