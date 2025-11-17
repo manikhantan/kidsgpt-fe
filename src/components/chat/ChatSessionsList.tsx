@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { MessageSquare, Plus, Sparkles } from 'lucide-react';
+import { MessageSquare, Plus, Sparkles, Home } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useAppSelector } from '@/store/hooks';
 import { useGetRecentChatSessionsQuery } from '@/store/api/apiSlice';
@@ -14,32 +14,72 @@ import { useCreateNewChat } from '@/hooks/useCreateNewChat';
 interface ChatSessionsListProps {
   onSessionClick?: () => void;
   maxItems?: number;
+  // Optional overrides for parent chat functionality
+  sessions?: ChatSessionSummary[];
+  isLoading?: boolean;
+  error?: unknown;
+  onNewChat?: () => void;
+  isNewChatDisabled?: boolean;
+  onLoadSession?: (session: ChatSessionSummary) => Promise<void>;
+  onViewAllChats?: () => void;
+  showBackButton?: boolean;
+  onBackClick?: () => void;
 }
 
-const ChatSessionsList = ({ onSessionClick, maxItems = 20 }: ChatSessionsListProps) => {
+const ChatSessionsList = ({
+  onSessionClick,
+  maxItems = 20,
+  sessions: externalSessions,
+  isLoading: externalIsLoading,
+  error: externalError,
+  onNewChat: externalOnNewChat,
+  isNewChatDisabled: externalIsNewChatDisabled,
+  onLoadSession: externalOnLoadSession,
+  onViewAllChats: externalOnViewAllChats,
+  showBackButton = false,
+  onBackClick,
+}: ChatSessionsListProps) => {
   const navigate = useNavigate();
   const { currentSessionId } = useAppSelector((state) => state.chat);
 
   const {
-    data: sessions,
-    isLoading,
-    error,
-  } = useGetRecentChatSessionsQuery(maxItems);
+    data: internalSessions,
+    isLoading: internalIsLoading,
+    error: internalError,
+  } = useGetRecentChatSessionsQuery(maxItems, { skip: !!externalSessions });
 
-  const { loadSession } = useLoadChatSession({ onSuccess: onSessionClick });
-  const { createNewChat, isCurrentConversationEmpty } = useCreateNewChat({ onSuccess: onSessionClick });
+  const { loadSession: internalLoadSession } = useLoadChatSession({ onSuccess: onSessionClick });
+  const { createNewChat: internalCreateNewChat, isCurrentConversationEmpty: internalIsCurrentConversationEmpty } = useCreateNewChat({ onSuccess: onSessionClick });
+
+  // Use external props if provided, otherwise use internal
+  const sessions = externalSessions ?? internalSessions;
+  const isLoading = externalIsLoading ?? internalIsLoading;
+  const error = externalError ?? internalError;
+  const isNewChatDisabled = externalIsNewChatDisabled ?? internalIsCurrentConversationEmpty;
 
   const handleNewChat = () => {
-    createNewChat();
+    if (externalOnNewChat) {
+      externalOnNewChat();
+    } else {
+      internalCreateNewChat();
+    }
   };
 
   const handleSessionClick = async (session: ChatSessionSummary) => {
-    await loadSession(session);
+    if (externalOnLoadSession) {
+      await externalOnLoadSession(session);
+    } else {
+      await internalLoadSession(session);
+    }
   };
 
   const handleViewAllChats = () => {
-    navigate(ROUTES.KID_ALL_CHATS);
-    onSessionClick?.();
+    if (externalOnViewAllChats) {
+      externalOnViewAllChats();
+    } else {
+      navigate(ROUTES.KID_ALL_CHATS);
+      onSessionClick?.();
+    }
   };
 
   if (isLoading) {
@@ -61,14 +101,25 @@ const ChatSessionsList = ({ onSessionClick, maxItems = 20 }: ChatSessionsListPro
   return (
     <div className="flex flex-col h-full">
       <div className="px-4 py-4 border-b border-gray-100">
+        {showBackButton && onBackClick && (
+          <Button
+            variant="ghost"
+            size="sm"
+            className="w-full justify-start text-gray-600 hover:text-gray-900 hover:bg-gray-100 mb-2"
+            leftIcon={<Home className="h-4 w-4" />}
+            onClick={onBackClick}
+          >
+            Back to Dashboard
+          </Button>
+        )}
         <Button
           variant="primary"
           size="md"
           className="w-full shadow-soft-lg"
           leftIcon={<Plus className="h-4 w-4" />}
           onClick={handleNewChat}
-          disabled={isCurrentConversationEmpty}
-          title={isCurrentConversationEmpty ? 'Send a message first to start a new chat' : undefined}
+          disabled={isNewChatDisabled}
+          title={isNewChatDisabled ? 'Send a message first to start a new chat' : undefined}
         >
           New Chat
         </Button>
