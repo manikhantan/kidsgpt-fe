@@ -10,6 +10,7 @@ import {
   ChatHistoryResponse,
   AnalyticsData,
   SendMessageResponse,
+  ParentChatResponse,
   ChatSessionSummary,
   PaginatedChatSessions,
   ChatSession,
@@ -113,7 +114,7 @@ export const apiSlice = createApi({
       providesTags: (_result, _error, childId) => [{ type: 'Analytics', id: childId }],
     }),
 
-    sendParentMessage: builder.mutation<SendMessageResponse, string>({
+    sendParentMessage: builder.mutation<ParentChatResponse, string>({
       query: (message) => ({
         url: '/api/parent/chat',
         method: 'POST',
@@ -126,7 +127,7 @@ export const apiSlice = createApi({
       query: ({ message, sessionId }) => ({
         url: '/api/kid/chat',
         method: 'POST',
-        body: { message, sessionId },
+        body: { message, session_id: sessionId },
       }),
       invalidatesTags: ['Messages', 'ChatSessions'],
     }),
