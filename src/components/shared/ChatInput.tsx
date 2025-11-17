@@ -1,6 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { Send, Sparkles } from 'lucide-react';
-import Button from '@/components/shared/Button';
+import { ArrowUp } from 'lucide-react';
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -28,49 +27,54 @@ const ChatInput = ({ onSend, isLoading = false, disabled = false }: ChatInputPro
     }
   };
 
-  // Auto-resize textarea
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = 'auto';
-      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 150)}px`;
+      textareaRef.current.style.height = `${Math.min(textareaRef.current.scrollHeight, 200)}px`;
     }
   }, [message]);
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="border-t border-gray-100 bg-white/80 backdrop-blur-lg p-4"
-    >
-      <div className="flex gap-3 items-end max-w-4xl mx-auto">
-        <div className="flex-1 relative">
+    <div className="border-t border-border bg-surface p-4">
+      <form onSubmit={handleSubmit} className="max-w-chat mx-auto">
+        <div className="relative">
           <textarea
             ref={textareaRef}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            placeholder="Type your message here..."
+            placeholder="Message KidsGPT..."
             disabled={isLoading || disabled}
             rows={1}
-            className="w-full rounded-2xl border-2 border-gray-200 bg-white/90 backdrop-blur-sm px-5 py-3.5 text-base text-gray-900 placeholder-gray-400 focus:border-primary-500 focus:outline-none focus:ring-4 focus:ring-primary-100 disabled:bg-gray-50 disabled:cursor-not-allowed resize-none transition-all duration-200 pr-12"
-            style={{ minHeight: '52px', maxHeight: '150px' }}
+            className="w-full rounded-2xl border border-border bg-surface-secondary px-4 py-3.5 pr-14
+                       text-text-primary placeholder-text-muted resize-none
+                       focus:outline-none focus:border-border-dark focus:ring-1 focus:ring-border-dark
+                       disabled:bg-surface-tertiary disabled:cursor-not-allowed
+                       transition-colors duration-150"
+            style={{ minHeight: '52px', maxHeight: '200px' }}
           />
-          {!message.trim() && !isLoading && (
-            <div className="absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none">
-              <Sparkles className="h-5 w-5 text-gray-300" />
-            </div>
-          )}
+          <button
+            type="submit"
+            disabled={!message.trim() || isLoading || disabled}
+            className={`absolute right-3 bottom-3 p-1.5 rounded-lg transition-colors duration-150
+                       ${
+                         message.trim() && !isLoading && !disabled
+                           ? 'bg-text-primary text-surface hover:bg-text-secondary'
+                           : 'bg-surface-tertiary text-text-muted cursor-not-allowed'
+                       }`}
+          >
+            {isLoading ? (
+              <div className="h-4 w-4 border-2 border-text-muted border-t-transparent rounded-full animate-spin" />
+            ) : (
+              <ArrowUp className="h-4 w-4" />
+            )}
+          </button>
         </div>
-        <Button
-          type="submit"
-          disabled={!message.trim() || isLoading || disabled}
-          isLoading={isLoading}
-          className="h-[52px] px-6 shadow-soft-lg"
-          leftIcon={!isLoading && <Send className="h-5 w-5" />}
-        >
-          <span className="hidden sm:inline">Send</span>
-        </Button>
-      </div>
-    </form>
+        <p className="text-xs text-text-muted text-center mt-2">
+          KidsGPT can make mistakes. Check important info.
+        </p>
+      </form>
+    </div>
   );
 };
 

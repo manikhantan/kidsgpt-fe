@@ -1,7 +1,15 @@
 import { NavLink, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, Shield, History, X, MessageCircle } from 'lucide-react';
+import {
+  LayoutDashboard,
+  Users,
+  Shield,
+  History,
+  X,
+  MessageCircle,
+  Plus,
+  ChevronDown
+} from 'lucide-react';
 import { clsx } from 'clsx';
-import Button from '@/components/shared/Button';
 import { ROUTES } from '@/utils/constants';
 import { useAppSelector } from '@/store/hooks';
 import ChatSessionsList from '@/components/chat/ChatSessionsList';
@@ -17,31 +25,26 @@ const parentNavItems = [
     to: ROUTES.PARENT_DASHBOARD,
     icon: LayoutDashboard,
     label: 'Dashboard',
-    description: 'Overview & stats',
   },
   {
     to: ROUTES.PARENT_CHILDREN,
     icon: Users,
-    label: 'Manage Children',
-    description: 'Add & manage kids',
+    label: 'Children',
   },
   {
     to: ROUTES.PARENT_CONTENT_CONTROL,
     icon: Shield,
     label: 'Content Control',
-    description: 'Safety settings',
   },
   {
     to: ROUTES.PARENT_CHAT_HISTORY,
     icon: History,
     label: 'Chat History',
-    description: 'View conversations',
   },
   {
     to: ROUTES.PARENT_CHAT,
     icon: MessageCircle,
     label: 'Chat',
-    description: 'Talk with AI',
   },
 ];
 
@@ -50,7 +53,6 @@ const kidNavItems = [
     to: ROUTES.KID_CHAT,
     icon: MessageCircle,
     label: 'Chat',
-    description: 'Talk with AI',
   },
 ];
 
@@ -61,7 +63,6 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const isKid = user?.role === 'child';
   const navItems = isParent ? parentNavItems : kidNavItems;
 
-  // Check if parent is on chat-related pages
   const isParentOnChatPage = isParent && (
     location.pathname === ROUTES.PARENT_CHAT ||
     location.pathname === ROUTES.PARENT_ALL_CHATS
@@ -69,81 +70,78 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
   return (
     <>
+      {/* Mobile overlay */}
       {isOpen && (
         <div
-          className="fixed inset-0 bg-gray-900/20 backdrop-blur-sm z-20 lg:hidden transition-opacity duration-300"
+          className="fixed inset-0 bg-black/50 z-20 lg:hidden transition-opacity duration-200"
           onClick={onClose}
         />
       )}
 
+      {/* Sidebar */}
       <aside
         className={clsx(
-          'fixed lg:static inset-y-0 left-0 z-30 w-72 bg-white/95 backdrop-blur-xl border-r border-gray-200/50 transform transition-all duration-300 ease-out lg:transform-none shadow-soft-xl lg:shadow-none',
+          'fixed lg:static inset-y-0 left-0 z-30 w-[260px] bg-sidebar flex flex-col',
+          'transform transition-transform duration-200 ease-out lg:transform-none',
           isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
         )}
       >
-        <div className="flex flex-col h-full">
-          <div className="flex items-center justify-between p-5 lg:hidden border-b border-gray-100">
-            <span className="text-lg font-bold text-gray-900">Navigation</span>
-            <Button variant="ghost" size="sm" onClick={onClose} className="hover:bg-gray-100">
-              <X className="h-5 w-5" />
-            </Button>
-          </div>
+        {/* Header */}
+        <div className="flex items-center justify-between p-3 h-14">
+          <button className="flex items-center gap-2 flex-1 p-2 rounded-lg hover:bg-sidebar-hover transition-colors">
+            <Plus className="h-4 w-4 text-sidebar-text" />
+            <span className="text-sm text-sidebar-text">New chat</span>
+          </button>
+          <button
+            onClick={onClose}
+            className="p-2 rounded-lg hover:bg-sidebar-hover transition-colors lg:hidden"
+          >
+            <X className="h-4 w-4 text-sidebar-text" />
+          </button>
+        </div>
 
+        {/* Content */}
+        <div className="flex-1 overflow-y-auto scrollbar-thin px-2">
           {isKid ? (
-            // Kid user gets chat sessions list
             <ChatSessionsList onSessionClick={onClose} />
           ) : isParentOnChatPage ? (
-            // Parent user on chat page gets chat sessions list
             <ParentChatSessionsList onSessionClick={onClose} />
           ) : (
-            // Parent user gets regular navigation
-            <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto scrollbar-thin">
-              {navItems.map((item, index) => (
+            <nav className="space-y-1 py-2">
+              {navItems.map((item) => (
                 <NavLink
                   key={item.to}
                   to={item.to}
                   onClick={onClose}
                   className={({ isActive }) =>
                     clsx(
-                      'group flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-medium transition-all duration-200 animate-slide-in-right',
-                      isActive
-                        ? 'bg-gradient-to-r from-primary-50 to-primary-100/50 text-primary-700 shadow-soft border border-primary-100/50'
-                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 border border-transparent'
+                      'sidebar-item group',
+                      isActive && 'bg-sidebar-hover'
                     )
                   }
-                  style={{ animationDelay: `${index * 50}ms` }}
                 >
-                  <div
-                    className={clsx(
-                      'p-2.5 rounded-lg transition-all duration-200',
-                      'group-[.bg-gradient-to-r]:bg-primary-100 group-[.bg-gradient-to-r]:text-primary-600',
-                      'bg-gray-100 text-gray-500 group-hover:bg-gray-200 group-hover:text-gray-700'
-                    )}
-                  >
-                    <item.icon className="h-5 w-5" />
-                  </div>
-                  <div className="flex flex-col">
-                    <span className="font-semibold">{item.label}</span>
-                    <span className="text-xs text-gray-500 group-hover:text-gray-600">
-                      {item.description}
-                    </span>
-                  </div>
+                  <item.icon className="h-4 w-4 text-sidebar-text-muted group-hover:text-sidebar-text" />
+                  <span className="text-sidebar-text group-hover:text-sidebar-text">
+                    {item.label}
+                  </span>
                 </NavLink>
               ))}
             </nav>
           )}
+        </div>
 
-          <div className="p-4 border-t border-gray-100">
-            <div className="bg-gradient-to-r from-primary-50 to-secondary-50 rounded-xl p-4">
-              <p className="text-xs text-gray-600 font-medium">
-                {isParent ? 'Parent Account' : 'Kid Account'}
-              </p>
-              <p className="text-sm font-semibold text-gray-900 mt-1 truncate">
-                {user?.name}
-              </p>
+        {/* Footer */}
+        <div className="border-t border-sidebar-border p-2">
+          <button className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-sidebar-hover transition-colors group">
+            <div className="w-8 h-8 rounded-full bg-accent flex items-center justify-center text-white text-sm font-medium">
+              {user?.name?.charAt(0).toUpperCase()}
             </div>
-          </div>
+            <div className="flex-1 text-left min-w-0">
+              <p className="text-sm text-sidebar-text truncate">{user?.name}</p>
+              <p className="text-xs text-sidebar-text-muted capitalize">{user?.role}</p>
+            </div>
+            <ChevronDown className="h-4 w-4 text-sidebar-text-muted" />
+          </button>
         </div>
       </aside>
     </>

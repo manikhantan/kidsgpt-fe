@@ -1,23 +1,22 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
 @layer base {
   html {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Söhne', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, Ubuntu, Cantarell, 'Noto Sans', sans-serif, 'Helvetica Neue', Arial;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
   }
 
   body {
-    @apply bg-gradient-to-br from-slate-50 via-white to-slate-100 text-gray-900 antialiased min-h-screen;
+    @apply bg-surface text-text-primary antialiased min-h-screen;
   }
 
-  /* Modern selection colors */
+  /* Clean selection */
   ::selection {
-    @apply bg-primary-200 text-primary-900;
+    @apply bg-accent/20 text-text-primary;
   }
 
   /* Smooth scrolling */
@@ -25,90 +24,122 @@
     scroll-behavior: smooth;
   }
 
-  /* Better focus styles */
+  /* Minimal focus styles */
   *:focus-visible {
-    @apply outline-none ring-2 ring-primary-500 ring-offset-2;
+    @apply outline-none ring-2 ring-accent/50 ring-offset-1;
+  }
+
+  /* Better text rendering */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  p {
+    @apply leading-relaxed;
   }
 }
 
 @layer components {
-  /* Modern Button Styles */
+  /* Modern minimal buttons */
   .btn {
-    @apply inline-flex items-center justify-center font-semibold transition-all duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 active:scale-95;
+    @apply inline-flex items-center justify-center font-medium transition-colors duration-150
+           focus:outline-none focus:ring-2 focus:ring-offset-1
+           disabled:cursor-not-allowed disabled:opacity-50;
   }
 
   .btn-primary {
-    @apply btn bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:from-primary-700 hover:to-primary-800 focus:ring-primary-500 shadow-soft hover:shadow-soft-lg rounded-xl;
+    @apply btn bg-accent text-white hover:bg-accent-hover rounded-lg px-4 py-2.5
+           focus:ring-accent/50;
   }
 
   .btn-secondary {
-    @apply btn bg-gradient-to-r from-secondary-600 to-secondary-700 text-white hover:from-secondary-700 hover:to-secondary-800 focus:ring-secondary-500 shadow-soft hover:shadow-soft-lg rounded-xl;
-  }
-
-  .btn-danger {
-    @apply btn bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 focus:ring-red-500 shadow-soft hover:shadow-soft-lg rounded-xl;
+    @apply btn bg-surface-secondary text-text-primary hover:bg-surface-tertiary
+           rounded-lg px-4 py-2.5 border border-border focus:ring-border;
   }
 
   .btn-ghost {
-    @apply btn bg-transparent text-gray-700 hover:bg-gray-100/80 focus:ring-gray-500 rounded-xl border border-transparent hover:border-gray-200;
+    @apply btn bg-transparent text-text-secondary hover:bg-surface-secondary
+           rounded-lg px-4 py-2.5 hover:text-text-primary;
   }
 
-  /* Modern Input Styles */
+  .btn-danger {
+    @apply btn bg-error text-white hover:bg-error-dark rounded-lg px-4 py-2.5
+           focus:ring-error/50;
+  }
+
+  /* Clean input styles */
   .input {
-    @apply w-full rounded-xl border-2 border-gray-200 bg-white/80 backdrop-blur-sm px-4 py-3 text-gray-900 placeholder-gray-400 transition-all duration-200 focus:border-primary-500 focus:outline-none focus:ring-4 focus:ring-primary-100 disabled:bg-gray-50 disabled:cursor-not-allowed shadow-inner-soft;
+    @apply w-full rounded-lg border border-border bg-surface px-4 py-3
+           text-text-primary placeholder-text-muted transition-colors duration-150
+           focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20
+           disabled:bg-surface-secondary disabled:cursor-not-allowed;
   }
 
   .input-error {
-    @apply border-red-400 focus:border-red-500 focus:ring-red-100;
+    @apply border-error focus:border-error focus:ring-error/20;
   }
 
-  /* Modern Card with Glassmorphism */
+  /* Modern card */
   .card {
-    @apply bg-white/80 backdrop-blur-md rounded-2xl shadow-soft border border-white/20 transition-all duration-300 hover:shadow-soft-lg;
+    @apply bg-surface rounded-xl border border-border transition-shadow duration-200
+           hover:shadow-md;
   }
 
-  /* Modern Chat Bubbles */
-  .chat-bubble {
-    @apply max-w-[80%] rounded-2xl px-5 py-3 break-words shadow-soft transition-all duration-200 animate-slide-up;
+  .card-flat {
+    @apply bg-surface rounded-xl border border-border;
   }
 
-  .chat-bubble-user {
-    @apply chat-bubble bg-gradient-to-r from-primary-600 to-primary-700 text-white ml-auto rounded-br-md;
+  /* ChatGPT-style message containers */
+  .message-container {
+    @apply w-full border-b border-border/50;
   }
 
-  .chat-bubble-assistant {
-    @apply chat-bubble bg-white text-gray-900 mr-auto rounded-bl-md border border-gray-100;
+  .message-container-user {
+    @apply message-container bg-surface;
   }
 
-  .chat-bubble-blocked {
-    @apply chat-bubble bg-gradient-to-r from-orange-50 to-orange-100 text-orange-800 border border-orange-200 rounded-bl-md;
+  .message-container-assistant {
+    @apply message-container bg-surface-secondary;
   }
 
-  /* Glass Effect */
-  .glass {
-    @apply bg-white/60 backdrop-blur-lg border border-white/20;
+  .message-content {
+    @apply max-w-chat mx-auto px-4 py-6 flex gap-4;
   }
 
-  .glass-dark {
-    @apply bg-gray-900/60 backdrop-blur-lg border border-gray-700/20;
-  }
-}
-
-@layer utilities {
-  /* Hide scrollbar but keep functionality */
-  .scrollbar-hide {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
+  .message-avatar {
+    @apply w-8 h-8 rounded-sm flex-shrink-0 flex items-center justify-center text-sm font-medium;
   }
 
-  .scrollbar-hide::-webkit-scrollbar {
-    display: none;
+  .message-avatar-user {
+    @apply message-avatar bg-accent text-white;
   }
 
-  /* Modern scrollbar styling */
+  .message-avatar-assistant {
+    @apply message-avatar bg-surface-dark text-white;
+  }
+
+  .message-text {
+    @apply flex-1 text-text-primary leading-relaxed;
+  }
+
+  /* Sidebar styles */
+  .sidebar {
+    @apply bg-sidebar text-sidebar-text h-full flex flex-col;
+  }
+
+  .sidebar-item {
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm
+           hover:bg-sidebar-hover transition-colors duration-150 cursor-pointer;
+  }
+
+  .sidebar-item-active {
+    @apply sidebar-item bg-sidebar-hover;
+  }
+
+  /* Clean scrollbar */
   .scrollbar-thin {
     scrollbar-width: thin;
-    scrollbar-color: theme('colors.gray.300') transparent;
+    scrollbar-color: rgba(155, 155, 155, 0.3) transparent;
   }
 
   .scrollbar-thin::-webkit-scrollbar {
@@ -120,81 +151,90 @@
   }
 
   .scrollbar-thin::-webkit-scrollbar-thumb {
-    background: theme('colors.gray.300');
+    background-color: rgba(155, 155, 155, 0.3);
     border-radius: 3px;
   }
 
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
-    background: theme('colors.gray.400');
+    background-color: rgba(155, 155, 155, 0.5);
   }
 
-  /* Typing Animation */
-  .animate-typing {
-    animation: typing 1.4s infinite;
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 
-  @keyframes typing {
-    0%, 100% {
-      opacity: 0.3;
-    }
-    50% {
-      opacity: 1;
-    }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@layer utilities {
+  /* Typing indicator */
+  .typing-dot {
+    @apply w-2 h-2 bg-text-muted rounded-full animate-pulse-subtle;
   }
 
-  /* Gradient text */
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-secondary-600;
+  /* Subtle hover effect */
+  .hover-bg {
+    @apply transition-colors duration-150 hover:bg-surface-secondary;
   }
 
-  .text-gradient-accent {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-accent-500 to-primary-600;
+  /* Icon button */
+  .icon-btn {
+    @apply p-2 rounded-lg text-text-secondary hover:bg-surface-secondary
+           hover:text-text-primary transition-colors duration-150;
   }
 
-  /* Animated gradient background */
-  .bg-gradient-animated {
-    background-size: 400% 400%;
-    animation: gradient 15s ease infinite;
+  /* Divider */
+  .divider {
+    @apply h-px bg-border w-full;
   }
 
-  @keyframes gradient {
-    0% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-    100% {
-      background-position: 0% 50%;
-    }
+  /* Badge */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
   }
 
-  /* Mesh gradient background */
-  .bg-mesh {
-    background-color: #f0f0f0;
-    background-image:
-      radial-gradient(at 40% 20%, hsla(240, 100%, 74%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 80% 0%, hsla(189, 100%, 56%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 0% 50%, hsla(355, 100%, 93%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 80% 50%, hsla(340, 100%, 76%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 0% 100%, hsla(240, 100%, 70%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 80% 100%, hsla(287, 100%, 76%, 0.1) 0px, transparent 50%),
-      radial-gradient(at 0% 0%, hsla(343, 100%, 76%, 0.1) 0px, transparent 50%);
+  .badge-success {
+    @apply badge bg-success-light text-success-dark;
   }
 
-  /* Hover lift effect */
-  .hover-lift {
-    @apply transition-transform duration-200 hover:-translate-y-1;
+  .badge-warning {
+    @apply badge bg-warning-light text-warning-dark;
+  }
+
+  .badge-error {
+    @apply badge bg-error-light text-error-dark;
+  }
+
+  .badge-info {
+    @apply badge bg-info-light text-info-dark;
   }
 
   /* Skeleton loading */
   .skeleton {
-    @apply relative overflow-hidden bg-gray-200 rounded-lg;
+    @apply bg-surface-tertiary rounded animate-pulse;
   }
 
-  .skeleton::after {
-    @apply absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/60 to-transparent animate-shimmer;
-    content: '';
-    background-size: 200% 100%;
+  /* Chat text customization */
+  .prose-chat {
+    @apply text-text-primary leading-relaxed;
   }
+}
+
+/* Animation for new messages */
+@keyframes messageSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message-animate {
+  animation: messageSlideIn 0.3s ease-out;
 }

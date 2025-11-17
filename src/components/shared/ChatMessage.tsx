@@ -1,6 +1,7 @@
 import { Message } from '@/types';
 import { formatMessageTime } from '@/utils/formatters';
-import { Bot, User, AlertTriangle } from 'lucide-react';
+import { Bot, User, AlertTriangle, Copy, Check } from 'lucide-react';
+import { useState } from 'react';
 
 interface ChatMessageProps {
   message: Message;
@@ -10,80 +11,113 @@ interface ChatMessageProps {
 const ChatMessage = ({ message, compact = false }: ChatMessageProps) => {
   const isUser = message.role === 'user';
   const isBlocked = message.blocked;
+  const [copied, setCopied] = useState(false);
+
+  const copyToClipboard = async () => {
+    await navigator.clipboard.writeText(message.content);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   if (compact) {
-    // Compact variant for history viewer
     return (
-      <div className={`flex flex-col ${isUser ? 'items-end' : 'items-start'}`}>
+      <div className={`flex gap-3 py-3 ${isUser ? 'flex-row-reverse' : ''}`}>
         <div
-          className={`max-w-[80%] rounded-2xl px-4 py-2 ${
+          className={`w-6 h-6 rounded-sm flex-shrink-0 flex items-center justify-center text-xs font-medium ${
             isBlocked
-              ? 'bg-orange-100 text-orange-800 border border-orange-300'
+              ? 'bg-warning-light text-warning-dark'
               : isUser
-              ? 'bg-primary-600 text-white'
-              : 'bg-gray-200 text-gray-900'
+              ? 'bg-accent text-white'
+              : 'bg-surface-dark text-white'
           }`}
         >
-          {isBlocked && (
-            <div className="flex items-center gap-2 mb-2">
-              <AlertTriangle className="h-4 w-4" />
-              <span className="text-sm font-medium">Blocked Content</span>
-            </div>
+          {isBlocked ? (
+            <AlertTriangle className="h-3 w-3" />
+          ) : isUser ? (
+            <User className="h-3 w-3" />
+          ) : (
+            <Bot className="h-3 w-3" />
           )}
-          <p className="break-words">{message.content}</p>
         </div>
-        <span className="text-xs text-gray-500 mt-1">
-          {formatMessageTime(message.timestamp)}
-        </span>
+        <div className="flex-1 min-w-0">
+          <p className="text-sm text-text-primary break-words">{message.content}</p>
+          <span className="text-xs text-text-muted mt-1 block">
+            {formatMessageTime(message.timestamp)}
+          </span>
+        </div>
       </div>
     );
   }
 
   return (
     <div
-      className={`flex gap-3 ${isUser ? 'flex-row-reverse' : 'flex-row'} animate-slide-up`}
+      className={`message-animate group ${
+        isUser ? 'message-container-user' : 'message-container-assistant'
+      }`}
     >
-      <div
-        className={`flex-shrink-0 w-9 h-9 rounded-xl flex items-center justify-center ${
-          isBlocked
-            ? 'bg-gradient-to-br from-orange-100 to-orange-200'
-            : isUser
-            ? 'bg-gradient-to-br from-primary-500 to-primary-600'
-            : 'bg-gradient-to-br from-gray-100 to-gray-200'
-        }`}
-      >
-        {isBlocked ? (
-          <AlertTriangle className="h-5 w-5 text-orange-600" />
-        ) : isUser ? (
-          <User className="h-5 w-5 text-white" />
-        ) : (
-          <Bot className="h-5 w-5 text-gray-600" />
-        )}
-      </div>
-
-      <div className={`flex flex-col ${isUser ? 'items-end' : 'items-start'} max-w-[75%]`}>
+      <div className="message-content">
         <div
-          className={`rounded-2xl px-5 py-3 shadow-soft ${
+          className={`message-avatar ${
             isBlocked
-              ? 'bg-orange-100 text-orange-800 border border-orange-300 rounded-tr-md'
+              ? 'bg-warning-light'
               : isUser
-              ? 'bg-gradient-to-r from-primary-600 to-primary-700 text-white rounded-tr-md'
-              : 'bg-white text-gray-900 border border-gray-100 rounded-tl-md'
+              ? 'message-avatar-user'
+              : 'message-avatar-assistant'
           }`}
         >
+          {isBlocked ? (
+            <AlertTriangle className="h-4 w-4 text-warning-dark" />
+          ) : isUser ? (
+            'U'
+          ) : (
+            <Bot className="h-4 w-4" />
+          )}
+        </div>
+
+        <div className="flex-1 min-w-0">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-sm font-semibold text-text-primary">
+              {isBlocked ? 'Blocked' : isUser ? 'You' : 'Assistant'}
+            </span>
+            <span className="text-xs text-text-muted">
+              {formatMessageTime(message.timestamp)}
+            </span>
+          </div>
+
           {isBlocked && (
-            <div className="flex items-center gap-2 mb-2">
-              <AlertTriangle className="h-4 w-4" />
-              <span className="text-sm font-medium">Blocked Content</span>
+            <div className="flex items-center gap-2 mb-3 px-3 py-2 bg-warning-light rounded-lg">
+              <AlertTriangle className="h-4 w-4 text-warning-dark" />
+              <span className="text-sm font-medium text-warning-dark">
+                This content was blocked for safety
+              </span>
             </div>
           )}
-          <p className="text-base break-words whitespace-pre-wrap leading-relaxed">
-            {message.content}
-          </p>
+
+          <div className="message-text">
+            <p className="whitespace-pre-wrap">{message.content}</p>
+          </div>
+
+          {!isUser && !isBlocked && (
+            <div className="mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
+              <button
+                onClick={copyToClipboard}
+                className="inline-flex items-center gap-1.5 text-xs text-text-muted hover:text-text-primary transition-colors"
+              >
+                {copied ? (
+                  <>
+                    <Check className="h-3.5 w-3.5" />
+                    Copied
+                  </>
+                ) : (
+                  <>
+                    <Copy className="h-3.5 w-3.5" />
+                    Copy
+                  </>
+                )}
+              </button>
+            </div>
+          )}
         </div>
-        <span className="text-xs text-gray-400 mt-1.5 px-1 font-medium">
-          {formatMessageTime(message.timestamp)}
-        </span>
       </div>
     </div>
   );
