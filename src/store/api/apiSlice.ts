@@ -127,7 +127,7 @@ export const apiSlice = createApi({
       query: ({ message, sessionId }) => ({
         url: '/api/kid/chat',
         method: 'POST',
-        body: { message, session_id: sessionId },
+        body: { message, sessionId },
       }),
       invalidatesTags: ['Messages', 'ChatSessions'],
     }),
