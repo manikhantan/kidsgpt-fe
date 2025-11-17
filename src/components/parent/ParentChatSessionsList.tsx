@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { MessageSquare, Plus, Sparkles } from 'lucide-react';
+import { MessageSquare, Plus, Sparkles, Home } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useAppSelector } from '@/store/hooks';
 import { useGetRecentParentChatSessionsQuery } from '@/store/api/apiSlice';
@@ -42,6 +42,11 @@ const ParentChatSessionsList = ({ onSessionClick, maxItems = 20 }: ParentChatSes
     onSessionClick?.();
   };
 
+  const handleGoHome = () => {
+    navigate(ROUTES.PARENT_DASHBOARD);
+    onSessionClick?.();
+  };
+
   if (isLoading) {
     return (
       <div className="py-8 flex justify-center">
@@ -60,7 +65,16 @@ const ParentChatSessionsList = ({ onSessionClick, maxItems = 20 }: ParentChatSes
 
   return (
     <div className="flex flex-col h-full">
-      <div className="px-4 py-4 border-b border-gray-100">
+      <div className="px-4 py-4 border-b border-gray-100 space-y-2">
+        <Button
+          variant="ghost"
+          size="sm"
+          className="w-full justify-start text-gray-600 hover:text-gray-900 hover:bg-gray-100"
+          leftIcon={<Home className="h-4 w-4" />}
+          onClick={handleGoHome}
+        >
+          Back to Dashboard
+        </Button>
         <Button
           variant="primary"
           size="md"
