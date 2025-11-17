@@ -10,14 +10,16 @@ const Layout = ({ children }: LayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="h-screen flex flex-col bg-gray-50">
+    <div className="h-screen flex flex-col bg-gradient-to-br from-slate-50 via-white to-gray-50">
       <Header
         showMenuButton={true}
         onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
       />
       <div className="flex flex-1 min-h-0">
         <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-        <main className="flex-1 p-6 min-h-0">{children}</main>
+        <main className="flex-1 p-6 min-h-0 overflow-auto scrollbar-thin">
+          <div className="animate-fade-in">{children}</div>
+        </main>
       </div>
     </div>
   );
