@@ -4,6 +4,7 @@ import { clsx } from 'clsx';
 import Button from '@/components/shared/Button';
 import { ROUTES } from '@/utils/constants';
 import { useAppSelector } from '@/store/hooks';
+import ChatSessionsList from '@/components/chat/ChatSessionsList';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -49,7 +50,9 @@ const kidNavItems = [
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const user = useAppSelector((state) => state.auth.user);
   const isParent = user?.role === 'parent';
+  const isKid = user?.role === 'child';
   const navItems = isParent ? parentNavItems : kidNavItems;
+
   return (
     <>
       {isOpen && (
@@ -73,26 +76,32 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             </Button>
           </div>
 
-          <nav className="flex-1 px-4 py-4 space-y-1">
-            {navItems.map((item) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                onClick={onClose}
-                className={({ isActive }) =>
-                  clsx(
-                    'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
-                    isActive
-                      ? 'bg-primary-50 text-primary-700'
-                      : 'text-gray-700 hover:bg-gray-100'
-                  )
-                }
-              >
-                <item.icon className="h-5 w-5" />
-                {item.label}
-              </NavLink>
-            ))}
-          </nav>
+          {isKid ? (
+            // Kid user gets chat sessions list
+            <ChatSessionsList onSessionClick={onClose} />
+          ) : (
+            // Parent user gets regular navigation
+            <nav className="flex-1 px-4 py-4 space-y-1">
+              {navItems.map((item) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  onClick={onClose}
+                  className={({ isActive }) =>
+                    clsx(
+                      'flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors',
+                      isActive
+                        ? 'bg-primary-50 text-primary-700'
+                        : 'text-gray-700 hover:bg-gray-100'
+                    )
+                  }
+                >
+                  <item.icon className="h-5 w-5" />
+                  {item.label}
+                </NavLink>
+              ))}
+            </nav>
+          )}
         </div>
       </aside>
     </>

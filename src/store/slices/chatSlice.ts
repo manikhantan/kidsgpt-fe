@@ -4,6 +4,7 @@ import { Message } from '@/types';
 interface ChatState {
   messages: Message[];
   currentSessionId: string | null;
+  currentSessionTitle: string | null;
   loading: boolean;
   error: string | null;
 }
@@ -11,6 +12,7 @@ interface ChatState {
 const initialState: ChatState = {
   messages: [],
   currentSessionId: null,
+  currentSessionTitle: null,
   loading: false,
   error: null,
 };
@@ -42,6 +44,20 @@ const chatSlice = createSlice({
     setCurrentSessionId: (state, action: PayloadAction<string | null>) => {
       state.currentSessionId = action.payload;
     },
+    setCurrentSessionTitle: (state, action: PayloadAction<string | null>) => {
+      state.currentSessionTitle = action.payload;
+    },
+    setCurrentSession: (
+      state,
+      action: PayloadAction<{ id: string | null; title: string | null; messages?: Message[] }>
+    ) => {
+      state.currentSessionId = action.payload.id;
+      state.currentSessionTitle = action.payload.title;
+      if (action.payload.messages) {
+        state.messages = action.payload.messages;
+      }
+      state.error = null;
+    },
     setChatLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
@@ -52,6 +68,7 @@ const chatSlice = createSlice({
     clearChat: (state) => {
       state.messages = [];
       state.currentSessionId = null;
+      state.currentSessionTitle = null;
       state.error = null;
     },
   },
@@ -63,6 +80,8 @@ export const {
   updateMessage,
   removeMessage,
   setCurrentSessionId,
+  setCurrentSessionTitle,
+  setCurrentSession,
   setChatLoading,
   setChatError,
   clearChat,
