@@ -1,17 +1,15 @@
 import { useNavigate } from 'react-router-dom';
 import { MessageSquare, Plus, Sparkles } from 'lucide-react';
 import { clsx } from 'clsx';
-import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { setCurrentSession } from '@/store/slices/chatSlice';
-import {
-  useGetRecentChatSessionsQuery,
-  useLazyGetChatSessionQuery,
-} from '@/store/api/apiSlice';
+import { useAppSelector } from '@/store/hooks';
+import { useGetRecentChatSessionsQuery } from '@/store/api/apiSlice';
 import { ROUTES } from '@/utils/constants';
 import { formatRelativeTime, truncateText } from '@/utils/formatters';
 import { ChatSessionSummary } from '@/types';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
 import Button from '@/components/shared/Button';
+import { useLoadChatSession } from '@/hooks/useLoadChatSession';
+import { useCreateNewChat } from '@/hooks/useCreateNewChat';
 
 interface ChatSessionsListProps {
   onSessionClick?: () => void;
@@ -20,8 +18,7 @@ interface ChatSessionsListProps {
 
 const ChatSessionsList = ({ onSessionClick, maxItems = 20 }: ChatSessionsListProps) => {
   const navigate = useNavigate();
-  const dispatch = useAppDispatch();
-  const { currentSessionId, messages } = useAppSelector((state) => state.chat);
+  const { currentSessionId } = useAppSelector((state) => state.chat);
 
   const {
     data: sessions,
@@ -29,47 +26,15 @@ const ChatSessionsList = ({ onSessionClick, maxItems = 20 }: ChatSessionsListPro
     error,
   } = useGetRecentChatSessionsQuery(maxItems);
 
-  const [getSession] = useLazyGetChatSessionQuery();
-
-  // Check if current conversation is empty (no messages sent yet)
-  const isCurrentConversationEmpty = messages.length === 0;
+  const { loadSession } = useLoadChatSession({ onSuccess: onSessionClick });
+  const { createNewChat, isCurrentConversationEmpty } = useCreateNewChat({ onSuccess: onSessionClick });
 
   const handleNewChat = () => {
-    // Don't create a new session if current conversation is already empty
-    if (isCurrentConversationEmpty) {
-      // Just navigate to chat page, no need to create a new session
-      navigate(ROUTES.KID_CHAT);
-      onSessionClick?.();
-      return;
-    }
-
-    // Clear the current session - a new backend session will be created when user sends first message
-    dispatch(
-      setCurrentSession({
-        id: null,
-        title: null,
-        messages: [],
-      })
-    );
-    navigate(ROUTES.KID_CHAT);
-    onSessionClick?.();
+    createNewChat();
   };
 
   const handleSessionClick = async (session: ChatSessionSummary) => {
-    try {
-      const fullSession = await getSession(session.id).unwrap();
-      dispatch(
-        setCurrentSession({
-          id: fullSession.id,
-          title: fullSession.title || session.title,
-          messages: fullSession.messages,
-        })
-      );
-      navigate(ROUTES.KID_CHAT);
-      onSessionClick?.();
-    } catch (err) {
-      console.error('Failed to load session:', err);
-    }
+    await loadSession(session);
   };
 
   const handleViewAllChats = () => {

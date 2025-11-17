@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import MessageList from '@/components/kid/MessageList';
-import ChatInput from '@/components/kid/ChatInput';
+import MessageList from '@/components/shared/MessageList';
+import ChatInput from '@/components/shared/ChatInput';
+import LoadingDots from '@/components/shared/LoadingDots';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { addMessage, setChatLoading } from '@/store/slices/chatSlice';
 import { useSendParentMessageMutation } from '@/store/api/apiSlice';
@@ -63,17 +64,7 @@ const ParentChatInterface = () => {
           </div>
         )}
 
-        {chatLoading && (
-          <div className="flex justify-start px-4 pb-2">
-            <div className="bg-gray-200 rounded-2xl px-4 py-3">
-              <div className="flex gap-1">
-                <span className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                <span className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                <span className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-              </div>
-            </div>
-          </div>
-        )}
+        {chatLoading && <LoadingDots variant="simple" />}
 
         <ChatInput onSend={handleSendMessage} isLoading={chatLoading} />
       </div>
