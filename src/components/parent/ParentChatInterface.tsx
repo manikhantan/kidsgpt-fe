@@ -4,7 +4,7 @@ import MessageList from '@/components/shared/MessageList';
 import ChatInput from '@/components/shared/ChatInput';
 import LoadingDots from '@/components/shared/LoadingDots';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
-import { addMessage, setChatLoading, setCurrentSession } from '@/store/slices/chatSlice';
+import { addMessage, setChatLoading, setCurrentSessionId, setCurrentSessionTitle } from '@/store/slices/chatSlice';
 import { useSendParentMessageMutation } from '@/store/api/apiSlice';
 import { Message } from '@/types';
 
@@ -30,36 +30,28 @@ const ParentChatInterface = () => {
 
     try {
       const response = await sendMessage({ message: content, sessionId: currentSessionId || undefined }).unwrap();
+      console.log('Parent chat API response:', response);
 
       // Update session info if this is a new session
       if (response.session_id && !currentSessionId) {
-        dispatch(
-          setCurrentSession({
-            id: response.session_id,
-            title: response.session_title || 'New Chat',
-            messages: [...messages, userMessage],
-          })
-        );
+        dispatch(setCurrentSessionId(response.session_id));
+        dispatch(setCurrentSessionTitle(response.session_title || 'New Chat'));
       } else if (response.session_title && response.session_title !== currentSessionTitle) {
         // Update title if it changed (e.g., generated from first message)
-        dispatch(
-          setCurrentSession({
-            id: currentSessionId,
-            title: response.session_title,
-            messages: [...messages, userMessage],
-          })
-        );
+        dispatch(setCurrentSessionTitle(response.session_title));
       }
 
       const assistantMessage: Message = {
-        id: response.id,
-        content: response.response,
+        id: response.assistant_message.id,
+        content: response.assistant_message.content,
         role: 'assistant',
-        timestamp: new Date().toISOString(),
+        timestamp: response.assistant_message.created_at,
         status: 'sent',
       };
+      console.log('Adding assistant message:', assistantMessage);
       dispatch(addMessage(assistantMessage));
     } catch (err) {
+      console.error('Parent chat error:', err);
       setError('Failed to send message. Please try again.');
       const errorMessage: Message = {
         id: `error-${Date.now()}`,
