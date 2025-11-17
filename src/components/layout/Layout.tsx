@@ -18,7 +18,7 @@ const Layout = ({ children }: LayoutProps) => {
           sidebarOpen={sidebarOpen}
           onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
         />
-        <main className="flex-1 overflow-auto">
+        <main className="flex-1 overflow-auto pl-4">
           {children}
         </main>
       </div>
