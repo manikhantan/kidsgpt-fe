@@ -1,10 +1,11 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { LayoutDashboard, Users, Shield, History, X, MessageCircle } from 'lucide-react';
 import { clsx } from 'clsx';
 import Button from '@/components/shared/Button';
 import { ROUTES } from '@/utils/constants';
 import { useAppSelector } from '@/store/hooks';
 import ChatSessionsList from '@/components/chat/ChatSessionsList';
+import ParentChatSessionsList from '@/components/parent/ParentChatSessionsList';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -55,9 +56,16 @@ const kidNavItems = [
 
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const user = useAppSelector((state) => state.auth.user);
+  const location = useLocation();
   const isParent = user?.role === 'parent';
   const isKid = user?.role === 'child';
   const navItems = isParent ? parentNavItems : kidNavItems;
+
+  // Check if parent is on chat-related pages
+  const isParentOnChatPage = isParent && (
+    location.pathname === ROUTES.PARENT_CHAT ||
+    location.pathname === ROUTES.PARENT_ALL_CHATS
+  );
 
   return (
     <>
@@ -85,6 +93,9 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           {isKid ? (
             // Kid user gets chat sessions list
             <ChatSessionsList onSessionClick={onClose} />
+          ) : isParentOnChatPage ? (
+            // Parent user on chat page gets chat sessions list
+            <ParentChatSessionsList onSessionClick={onClose} />
           ) : (
             // Parent user gets regular navigation
             <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto scrollbar-thin">
