@@ -13,17 +13,30 @@ const LoadingSpinner = ({
   text,
 }: LoadingSpinnerProps) => {
   const sizeStyles = {
-    sm: 'h-4 w-4',
-    md: 'h-8 w-8',
-    lg: 'h-12 w-12',
+    sm: 'h-5 w-5',
+    md: 'h-10 w-10',
+    lg: 'h-14 w-14',
+  };
+
+  const textSizeStyles = {
+    sm: 'text-xs',
+    md: 'text-sm',
+    lg: 'text-base',
   };
 
   return (
-    <div className={clsx('flex flex-col items-center justify-center', className)}>
-      <Loader2
-        className={clsx('animate-spin text-primary-600', sizeStyles[size])}
-      />
-      {text && <p className="mt-2 text-sm text-gray-600">{text}</p>}
+    <div className={clsx('flex flex-col items-center justify-center gap-3', className)}>
+      <div className="relative">
+        <div className="absolute inset-0 bg-primary-400 rounded-full blur-lg opacity-20 animate-pulse-soft" />
+        <Loader2
+          className={clsx('animate-spin text-primary-600 relative', sizeStyles[size])}
+        />
+      </div>
+      {text && (
+        <p className={clsx('font-medium text-gray-600 animate-pulse-soft', textSizeStyles[size])}>
+          {text}
+        </p>
+      )}
     </div>
   );
 };

@@ -8,6 +8,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { addMessage, setChatLoading } from '@/store/slices/chatSlice';
 import { useSendMessageMutation, useGetKidChatHistoryQuery } from '@/store/api/apiSlice';
 import { Message } from '@/types';
+import { Bot } from 'lucide-react';
 
 const ChatInterface = () => {
   const dispatch = useAppDispatch();
@@ -77,15 +78,17 @@ const ChatInterface = () => {
 
   if (loadingHistory) {
     return (
-      <div className="flex items-center justify-center h-full bg-gradient-to-br from-yellow-50 to-orange-50">
-        <LoadingSpinner size="lg" text="Loading your chats..." />
+      <div className="flex items-center justify-center h-full bg-gradient-to-br from-primary-50 via-white to-secondary-50">
+        <div className="text-center animate-fade-in">
+          <LoadingSpinner size="lg" text="Loading your chats..." />
+        </div>
       </div>
     );
   }
 
   if (historyError) {
     return (
-      <div className="flex items-center justify-center flex-1 bg-gradient-to-br from-yellow-50 to-orange-50 p-4">
+      <div className="flex items-center justify-center flex-1 bg-gradient-to-br from-primary-50 via-white to-secondary-50 p-4">
         <ErrorMessage
           message="Oops! We couldn't load your chats. Please try again!"
           onRetry={refetch}
@@ -95,7 +98,7 @@ const ChatInterface = () => {
   }
 
   return (
-    <div className="flex flex-col h-full bg-gray-50">
+    <div className="flex flex-col h-full bg-gradient-to-br from-slate-50 via-white to-gray-50 rounded-2xl overflow-hidden border border-gray-100 shadow-soft">
       <div className="flex-1 flex flex-col min-h-0">
         <MessageList messages={messages} />
 
@@ -104,12 +107,17 @@ const ChatInterface = () => {
         )}
 
         {chatLoading && (
-          <div className="flex justify-start px-4 pb-2">
-            <div className="bg-gray-200 rounded-2xl px-4 py-3">
-              <div className="flex gap-1">
-                <span className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                <span className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                <span className="w-2 h-2 bg-gray-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+          <div className="flex justify-start px-6 pb-3">
+            <div className="flex items-center gap-3 animate-slide-up">
+              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+                <Bot className="h-5 w-5 text-gray-600" />
+              </div>
+              <div className="bg-white rounded-2xl rounded-tl-md px-5 py-3.5 shadow-soft border border-gray-100">
+                <div className="flex gap-1.5">
+                  <span className="w-2.5 h-2.5 bg-primary-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
+                  <span className="w-2.5 h-2.5 bg-primary-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
+                  <span className="w-2.5 h-2.5 bg-primary-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
+                </div>
               </div>
             </div>
           </div>
