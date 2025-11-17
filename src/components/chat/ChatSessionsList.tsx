@@ -11,27 +11,57 @@ import { useLoadChatSession } from '@/hooks/useLoadChatSession';
 interface ChatSessionsListProps {
   onSessionClick?: () => void;
   maxItems?: number;
+  // Optional overrides for parent chat functionality
+  sessions?: ChatSessionSummary[];
+  isLoading?: boolean;
+  error?: unknown;
+  onNewChat?: () => void;
+  isNewChatDisabled?: boolean;
+  onLoadSession?: (session: ChatSessionSummary) => Promise<void>;
+  onViewAllChats?: () => void;
+  showBackButton?: boolean;
+  onBackClick?: () => void;
 }
 
-const ChatSessionsList = ({ onSessionClick, maxItems = 20 }: ChatSessionsListProps) => {
+const ChatSessionsList = ({
+  onSessionClick,
+  maxItems = 20,
+  sessions: externalSessions,
+  isLoading: externalIsLoading,
+  error: externalError,
+  onNewChat: externalOnNewChat,
+  isNewChatDisabled: externalIsNewChatDisabled,
+  onLoadSession: externalOnLoadSession,
+  onViewAllChats: externalOnViewAllChats,
+  showBackButton = false,
+  onBackClick,
+}: ChatSessionsListProps) => {
   const navigate = useNavigate();
   const { currentSessionId } = useAppSelector((state) => state.chat);
 
   const {
-    data: sessions,
-    isLoading,
-    error,
-  } = useGetRecentChatSessionsQuery(maxItems);
+    data: internalSessions,
+    isLoading: internalIsLoading,
+    error: internalError,
+  } = useGetRecentChatSessionsQuery(maxItems, { skip: !!externalSessions });
 
   const { loadSession } = useLoadChatSession({ onSuccess: onSessionClick });
 
   const handleSessionClick = async (session: ChatSessionSummary) => {
-    await loadSession(session);
+    if (externalOnLoadSession) {
+      await externalOnLoadSession(session);
+    } else {
+      await internalLoadSession(session);
+    }
   };
 
   const handleViewAllChats = () => {
-    navigate(ROUTES.KID_ALL_CHATS);
-    onSessionClick?.();
+    if (externalOnViewAllChats) {
+      externalOnViewAllChats();
+    } else {
+      navigate(ROUTES.KID_ALL_CHATS);
+      onSessionClick?.();
+    }
   };
 
   if (isLoading) {
