@@ -53,9 +53,8 @@ const chatSlice = createSlice({
     ) => {
       state.currentSessionId = action.payload.id;
       state.currentSessionTitle = action.payload.title;
-      if (action.payload.messages) {
-        state.messages = action.payload.messages;
-      }
+      // Always update messages to ensure consistency - default to empty array if not provided
+      state.messages = action.payload.messages ?? [];
       state.error = null;
     },
     setChatLoading: (state, action: PayloadAction<boolean>) => {

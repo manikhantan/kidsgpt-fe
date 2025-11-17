@@ -8,7 +8,7 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
   addMessage,
   setChatLoading,
-  setCurrentSessionId,
+  setCurrentSession,
   setCurrentSessionTitle,
 } from '@/store/slices/chatSlice';
 import {
@@ -49,11 +49,14 @@ const ChatInterface = () => {
     if (!currentSessionId && chatHistory?.sessions && chatHistory.sessions.length > 0 && !hasLoadedHistory.current) {
       hasLoadedHistory.current = true;
       const lastSession = chatHistory.sessions[chatHistory.sessions.length - 1];
-      dispatch(setCurrentSessionId(lastSession.id));
-      dispatch(setCurrentSessionTitle(lastSession.title || 'Chat'));
-      lastSession.messages.forEach((msg) => {
-        dispatch(addMessage(msg));
-      });
+      // Use setCurrentSession to atomically update session ID, title, and messages together
+      dispatch(
+        setCurrentSession({
+          id: lastSession.id,
+          title: lastSession.title || 'Chat',
+          messages: lastSession.messages,
+        })
+      );
     }
   }, [chatHistory, currentSessionId, dispatch]);
 
@@ -61,14 +64,13 @@ const ChatInterface = () => {
     setBlockedInfo({ show: false, allowedTopics: [] });
 
     const userMessage: Message = {
-      id: `msg-${Date.now()}`,
+      id: `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
       content,
       role: 'user',
       timestamp: new Date().toISOString(),
       status: 'sent',
     };
 
-    dispatch(addMessage(userMessage));
     dispatch(setChatLoading(true));
 
     try {
@@ -77,8 +79,17 @@ const ChatInterface = () => {
       if (!sessionId) {
         const newSession = await createSession().unwrap();
         sessionId = newSession.id;
-        dispatch(setCurrentSessionId(newSession.id));
-        dispatch(setCurrentSessionTitle(newSession.title || 'New Chat'));
+        // Use setCurrentSession to atomically update session and clear old messages
+        dispatch(
+          setCurrentSession({
+            id: newSession.id,
+            title: newSession.title || 'New Chat',
+            messages: [userMessage], // Start fresh with just the user message
+          })
+        );
+      } else {
+        // Add message to existing session
+        dispatch(addMessage(userMessage));
       }
 
       const response = await sendMessage({ message: content, sessionId: sessionId || undefined }).unwrap();
@@ -90,7 +101,7 @@ const ChatInterface = () => {
         });
       } else {
         const assistantMessage: Message = {
-          id: response.id,
+          id: response.id || `assistant-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
           content: response.response,
           role: 'assistant',
           timestamp: new Date().toISOString(),
@@ -99,13 +110,13 @@ const ChatInterface = () => {
         dispatch(addMessage(assistantMessage));
 
         // Update session title if returned
-        if (response.sessionTitle) {
+        if (response.sessionTitle && response.sessionTitle !== currentSessionTitle) {
           dispatch(setCurrentSessionTitle(response.sessionTitle));
         }
       }
     } catch (error) {
       const errorMessage: Message = {
-        id: `error-${Date.now()}`,
+        id: `error-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
         content: 'Oops! Something went wrong. Please try again!',
         role: 'assistant',
         timestamp: new Date().toISOString(),
