@@ -137,6 +137,41 @@ export const apiSlice = createApi({
 
     getParentChatSession: builder.query<ChatSession, string>({
       query: (sessionId) => `/api/parent/chat-sessions/${sessionId}`,
+      transformResponse: (response: {
+        id: string;
+        parent_id?: string;
+        title?: string;
+        started_at?: string;
+        ended_at?: string;
+        last_message_at?: string;
+        message_count?: number;
+        messages: Array<{
+          id: string;
+          session_id?: string;
+          role: string;
+          content: string;
+          blocked?: boolean;
+          block_reason?: string | null;
+          created_at: string;
+        }>;
+      }) => ({
+        id: response.id,
+        childId: response.parent_id || '',
+        title: response.title,
+        startedAt: response.started_at || new Date().toISOString(),
+        endedAt: response.ended_at,
+        lastMessageAt: response.last_message_at,
+        messageCount: response.message_count,
+        messages: response.messages.map((msg) => ({
+          id: msg.id,
+          content: msg.content,
+          role: msg.role as 'user' | 'assistant' | 'system',
+          timestamp: msg.created_at,
+          status: 'sent' as const,
+          blocked: msg.blocked,
+          blockedReason: msg.block_reason || undefined,
+        })),
+      }),
       providesTags: (_result, _error, sessionId) => [{ type: 'ParentChatSessions', id: sessionId }],
     }),
 
@@ -173,6 +208,41 @@ export const apiSlice = createApi({
 
     getChatSession: builder.query<ChatSession, string>({
       query: (sessionId) => `/api/kid/chat-sessions/${sessionId}`,
+      transformResponse: (response: {
+        id: string;
+        child_id?: string;
+        title?: string;
+        started_at?: string;
+        ended_at?: string;
+        last_message_at?: string;
+        message_count?: number;
+        messages: Array<{
+          id: string;
+          session_id?: string;
+          role: string;
+          content: string;
+          blocked?: boolean;
+          block_reason?: string | null;
+          created_at: string;
+        }>;
+      }) => ({
+        id: response.id,
+        childId: response.child_id || '',
+        title: response.title,
+        startedAt: response.started_at || new Date().toISOString(),
+        endedAt: response.ended_at,
+        lastMessageAt: response.last_message_at,
+        messageCount: response.message_count,
+        messages: response.messages.map((msg) => ({
+          id: msg.id,
+          content: msg.content,
+          role: msg.role as 'user' | 'assistant' | 'system',
+          timestamp: msg.created_at,
+          status: 'sent' as const,
+          blocked: msg.blocked,
+          blockedReason: msg.block_reason || undefined,
+        })),
+      }),
       providesTags: (_result, _error, sessionId) => [{ type: 'ChatSessions', id: sessionId }],
     }),
 
