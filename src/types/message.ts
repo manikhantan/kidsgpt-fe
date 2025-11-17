@@ -44,14 +44,30 @@ export interface SendMessageRequest {
   message: string;
 }
 
+// Backend message response format
+export interface BackendMessageResponse {
+  id: string;
+  session_id: string;
+  role: string;
+  content: string;
+  blocked: boolean;
+  block_reason: string | null;
+  created_at: string;
+}
+
 export interface SendMessageResponse {
+  user_message: BackendMessageResponse;
+  assistant_message: BackendMessageResponse | null;
+  was_blocked: boolean;
+  block_reason: string | null;
+  session_id: string;
+  session_title: string;
+}
+
+// Parent chat has simpler response format
+export interface ParentChatResponse {
   id: string;
   response: string;
-  blocked: boolean;
-  blockedReason?: string;
-  allowedTopics?: string[];
-  sessionId?: string;
-  sessionTitle?: string;
 }
 
 export interface ChatHistoryResponse {

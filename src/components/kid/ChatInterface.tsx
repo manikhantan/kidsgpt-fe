@@ -71,24 +71,24 @@ const ChatInterface = () => {
 
       const response = await sendMessage({ message: content, sessionId: sessionId as string }).unwrap();
 
-      if (response.blocked) {
+      if (response.was_blocked) {
         setBlockedInfo({
           show: true,
-          allowedTopics: response.allowedTopics || [],
+          allowedTopics: [], // Backend doesn't provide this in the new format
         });
-      } else {
+      } else if (response.assistant_message) {
         const assistantMessage: Message = {
-          id: response.id || `assistant-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-          content: response.response,
+          id: response.assistant_message.id,
+          content: response.assistant_message.content,
           role: 'assistant',
-          timestamp: new Date().toISOString(),
+          timestamp: response.assistant_message.created_at,
           status: 'sent',
         };
         dispatch(addMessage(assistantMessage));
 
         // Update session title if returned
-        if (response.sessionTitle && response.sessionTitle !== currentSessionTitle) {
-          dispatch(setCurrentSessionTitle(response.sessionTitle));
+        if (response.session_title && response.session_title !== currentSessionTitle) {
+          dispatch(setCurrentSessionTitle(response.session_title));
         }
       }
     } catch (error) {
