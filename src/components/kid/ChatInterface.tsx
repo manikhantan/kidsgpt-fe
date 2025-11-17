@@ -1,9 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState } from 'react';
 import MessageList from './MessageList';
 import ChatInput from './ChatInput';
 import BlockedNotification from './BlockedNotification';
-import LoadingSpinner from '@/components/shared/LoadingSpinner';
-import ErrorMessage from '@/components/shared/ErrorMessage';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
   addMessage,
@@ -13,7 +11,6 @@ import {
 } from '@/store/slices/chatSlice';
 import {
   useSendMessageMutation,
-  useGetKidChatHistoryQuery,
   useCreateChatSessionMutation,
 } from '@/store/api/apiSlice';
 import { Message } from '@/types';
@@ -33,32 +30,9 @@ const ChatInterface = () => {
     show: boolean;
     allowedTopics: string[];
   }>({ show: false, allowedTopics: [] });
-  const hasLoadedHistory = useRef(false);
 
-  const {
-    data: chatHistory,
-    isLoading: loadingHistory,
-    error: historyError,
-    refetch,
-  } = useGetKidChatHistoryQuery(undefined, {
-    skip: !!currentSessionId, // Skip if we already have a session
-  });
-
-  // Load last session if no current session is set
-  useEffect(() => {
-    if (!currentSessionId && chatHistory?.sessions && chatHistory.sessions.length > 0 && !hasLoadedHistory.current) {
-      hasLoadedHistory.current = true;
-      const lastSession = chatHistory.sessions[chatHistory.sessions.length - 1];
-      // Use setCurrentSession to atomically update session ID, title, and messages together
-      dispatch(
-        setCurrentSession({
-          id: lastSession.id,
-          title: lastSession.title || 'Chat',
-          messages: lastSession.messages,
-        })
-      );
-    }
-  }, [chatHistory, currentSessionId, dispatch]);
+  // Sessions are selected explicitly from the sidebar via setCurrentSession
+  // This ensures the correct session ID is always used
 
   const handleSendMessage = async (content: string) => {
     setBlockedInfo({ show: false, allowedTopics: [] });
@@ -76,7 +50,10 @@ const ChatInterface = () => {
     try {
       // If no session exists, create one first
       let sessionId = currentSessionId;
-      if (!sessionId) {
+      // Validate sessionId is a non-empty string
+      const hasValidSession = sessionId && typeof sessionId === 'string' && sessionId.trim() !== '';
+
+      if (!hasValidSession) {
         const newSession = await createSession().unwrap();
         sessionId = newSession.id;
         // Use setCurrentSession to atomically update session and clear old messages
@@ -92,7 +69,7 @@ const ChatInterface = () => {
         dispatch(addMessage(userMessage));
       }
 
-      const response = await sendMessage({ message: content, sessionId: sessionId || undefined }).unwrap();
+      const response = await sendMessage({ message: content, sessionId: sessionId as string }).unwrap();
 
       if (response.blocked) {
         setBlockedInfo({
@@ -127,27 +104,6 @@ const ChatInterface = () => {
       dispatch(setChatLoading(false));
     }
   };
-
-  if (loadingHistory && !currentSessionId) {
-    return (
-      <div className="flex items-center justify-center h-full bg-gradient-to-br from-primary-50 via-white to-secondary-50">
-        <div className="text-center animate-fade-in">
-          <LoadingSpinner size="lg" text="Loading your chats..." />
-        </div>
-      </div>
-    );
-  }
-
-  if (historyError && !currentSessionId) {
-    return (
-      <div className="flex items-center justify-center flex-1 bg-gradient-to-br from-primary-50 via-white to-secondary-50 p-4">
-        <ErrorMessage
-          message="Oops! We couldn't load your chats. Please try again!"
-          onRetry={refetch}
-        />
-      </div>
-    );
-  }
 
   return (
     <div className="flex flex-col h-full bg-gradient-to-br from-slate-50 via-white to-gray-50 rounded-2xl overflow-hidden border border-gray-100 shadow-soft">
