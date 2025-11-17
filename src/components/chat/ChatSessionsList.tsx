@@ -47,11 +47,16 @@ const ChatSessionsList = ({
 
   const { loadSession } = useLoadChatSession({ onSuccess: onSessionClick });
 
+  // Unify external and internal data sources
+  const sessions = externalSessions ?? internalSessions;
+  const isLoading = externalSessions ? externalIsLoading : internalIsLoading;
+  const error = externalSessions ? externalError : internalError;
+
   const handleSessionClick = async (session: ChatSessionSummary) => {
     if (externalOnLoadSession) {
       await externalOnLoadSession(session);
     } else {
-      await internalLoadSession(session);
+      await loadSession(session);
     }
   };
 
