@@ -14,6 +14,7 @@ export const ROUTES = {
   PARENT_CHAT_HISTORY: '/parent/chat-history',
   PARENT_CHILDREN: '/parent/children',
   PARENT_CHAT: '/parent/chat',
+  PARENT_ALL_CHATS: '/parent/all-chats',
   KID_CHAT: '/kid/chat',
   KID_ALL_CHATS: '/kid/all-chats',
 } as const;

@@ -30,7 +30,7 @@ const baseQuery = fetchBaseQuery({
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery,
-  tagTypes: ['Children', 'ContentRules', 'ChatHistory', 'Messages', 'Analytics', 'ChatSessions'],
+  tagTypes: ['Children', 'ContentRules', 'ChatHistory', 'Messages', 'Analytics', 'ChatSessions', 'ParentChatSessions'],
   endpoints: (builder) => ({
     // Auth endpoints
     parentRegister: builder.mutation<
@@ -114,12 +114,30 @@ export const apiSlice = createApi({
       providesTags: (_result, _error, childId) => [{ type: 'Analytics', id: childId }],
     }),
 
-    sendParentMessage: builder.mutation<ParentChatResponse, string>({
-      query: (message) => ({
+    sendParentMessage: builder.mutation<ParentChatResponse, { message: string; sessionId?: string }>({
+      query: ({ message, sessionId }) => ({
         url: '/api/parent/chat',
         method: 'POST',
-        body: { message },
+        body: { message, sessionId },
       }),
+      invalidatesTags: ['ParentChatSessions'],
+    }),
+
+    // Parent chat sessions endpoints
+    getRecentParentChatSessions: builder.query<ChatSessionSummary[], number | void>({
+      query: (limit = 20) => `/api/parent/chat-sessions/recent?limit=${limit}`,
+      providesTags: ['ParentChatSessions'],
+    }),
+
+    getParentChatSessions: builder.query<PaginatedChatSessions, { page?: number; pageSize?: number }>({
+      query: ({ page = 1, pageSize = 15 }) =>
+        `/api/parent/chat-sessions?page=${page}&pageSize=${pageSize}`,
+      providesTags: ['ParentChatSessions'],
+    }),
+
+    getParentChatSession: builder.query<ChatSession, string>({
+      query: (sessionId) => `/api/parent/chat-sessions/${sessionId}`,
+      providesTags: (_result, _error, sessionId) => [{ type: 'ParentChatSessions', id: sessionId }],
     }),
 
     // Kid endpoints
@@ -189,4 +207,8 @@ export const {
   useGetChatSessionQuery,
   useLazyGetChatSessionQuery,
   useCreateChatSessionMutation,
+  useGetRecentParentChatSessionsQuery,
+  useGetParentChatSessionsQuery,
+  useGetParentChatSessionQuery,
+  useLazyGetParentChatSessionQuery,
 } = apiSlice;

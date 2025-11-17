@@ -68,6 +68,8 @@ export interface SendMessageResponse {
 export interface ParentChatResponse {
   id: string;
   response: string;
+  session_id?: string;
+  session_title?: string;
 }
 
 export interface ChatHistoryResponse {

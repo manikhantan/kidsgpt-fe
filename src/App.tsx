@@ -14,6 +14,7 @@ const ContentControlPage = lazy(() => import('@/pages/parent/ContentControlPage'
 const ChatHistoryPage = lazy(() => import('@/pages/parent/ChatHistoryPage'));
 const ChildManagementPage = lazy(() => import('@/pages/parent/ChildManagementPage'));
 const ParentChatPage = lazy(() => import('@/pages/parent/ParentChatPage'));
+const AllParentChatsPage = lazy(() => import('@/pages/parent/AllParentChatsPage'));
 const KidChatPage = lazy(() => import('@/pages/kid/KidChatPage'));
 const AllChatsPage = lazy(() => import('@/pages/kid/AllChatsPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
@@ -50,6 +51,7 @@ const App = () => {
                     <Route path="chat-history" element={<ChatHistoryPage />} />
                     <Route path="children" element={<ChildManagementPage />} />
                     <Route path="chat" element={<ParentChatPage />} />
+                    <Route path="all-chats" element={<AllParentChatsPage />} />
                     <Route
                       path="*"
                       element={<Navigate to={ROUTES.PARENT_DASHBOARD} replace />}
