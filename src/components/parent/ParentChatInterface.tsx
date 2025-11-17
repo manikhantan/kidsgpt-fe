@@ -42,10 +42,10 @@ const ParentChatInterface = () => {
       }
 
       const assistantMessage: Message = {
-        id: response.id,
-        content: response.response,
+        id: response.assistant_message.id,
+        content: response.assistant_message.content,
         role: 'assistant',
-        timestamp: new Date().toISOString(),
+        timestamp: response.assistant_message.created_at,
         status: 'sent',
       };
       console.log('Adding assistant message:', assistantMessage);

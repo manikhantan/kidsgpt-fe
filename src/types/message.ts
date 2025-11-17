@@ -64,12 +64,12 @@ export interface SendMessageResponse {
   session_title: string;
 }
 
-// Parent chat has simpler response format
+// Parent chat response format (same as kid chat)
 export interface ParentChatResponse {
-  id: string;
-  response: string;
-  session_id?: string;
-  session_title?: string;
+  user_message: BackendMessageResponse;
+  assistant_message: BackendMessageResponse;
+  session_id: string;
+  session_title: string;
 }
 
 export interface ChatHistoryResponse {
