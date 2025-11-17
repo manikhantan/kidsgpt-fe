@@ -15,6 +15,7 @@ export const ROUTES = {
   PARENT_CHILDREN: '/parent/children',
   PARENT_CHAT: '/parent/chat',
   KID_CHAT: '/kid/chat',
+  KID_ALL_CHATS: '/kid/all-chats',
 } as const;
 
 export const API_ENDPOINTS = {
@@ -34,6 +35,8 @@ export const API_ENDPOINTS = {
   CHAT: '/api/kid/chat',
   KID_CHAT_HISTORY: '/api/kid/chat-history',
   CURRENT_SESSION: '/api/kid/current-session',
+  KID_CHAT_SESSIONS: '/api/kid/chat-sessions',
+  KID_CHAT_SESSION: '/api/kid/chat-sessions', // Used with /{id}
 } as const;
 
 export const MESSAGE_TYPES = {

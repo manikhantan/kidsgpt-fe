@@ -4,6 +4,7 @@ import { clsx } from 'clsx';
 import Button from '@/components/shared/Button';
 import { ROUTES } from '@/utils/constants';
 import { useAppSelector } from '@/store/hooks';
+import ChatSessionsList from '@/components/chat/ChatSessionsList';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -55,6 +56,7 @@ const kidNavItems = [
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const user = useAppSelector((state) => state.auth.user);
   const isParent = user?.role === 'parent';
+  const isKid = user?.role === 'child';
   const navItems = isParent ? parentNavItems : kidNavItems;
 
   return (
@@ -80,40 +82,46 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             </Button>
           </div>
 
-          <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto scrollbar-thin">
-            {navItems.map((item, index) => (
-              <NavLink
-                key={item.to}
-                to={item.to}
-                onClick={onClose}
-                className={({ isActive }) =>
-                  clsx(
-                    'group flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-medium transition-all duration-200 animate-slide-in-right',
-                    isActive
-                      ? 'bg-gradient-to-r from-primary-50 to-primary-100/50 text-primary-700 shadow-soft border border-primary-100/50'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 border border-transparent'
-                  )
-                }
-                style={{ animationDelay: `${index * 50}ms` }}
-              >
-                <div
-                  className={clsx(
-                    'p-2.5 rounded-lg transition-all duration-200',
-                    'group-[.bg-gradient-to-r]:bg-primary-100 group-[.bg-gradient-to-r]:text-primary-600',
-                    'bg-gray-100 text-gray-500 group-hover:bg-gray-200 group-hover:text-gray-700'
-                  )}
+          {isKid ? (
+            // Kid user gets chat sessions list
+            <ChatSessionsList onSessionClick={onClose} />
+          ) : (
+            // Parent user gets regular navigation
+            <nav className="flex-1 px-4 py-6 space-y-2 overflow-y-auto scrollbar-thin">
+              {navItems.map((item, index) => (
+                <NavLink
+                  key={item.to}
+                  to={item.to}
+                  onClick={onClose}
+                  className={({ isActive }) =>
+                    clsx(
+                      'group flex items-center gap-4 px-4 py-3.5 rounded-xl text-sm font-medium transition-all duration-200 animate-slide-in-right',
+                      isActive
+                        ? 'bg-gradient-to-r from-primary-50 to-primary-100/50 text-primary-700 shadow-soft border border-primary-100/50'
+                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900 border border-transparent'
+                    )
+                  }
+                  style={{ animationDelay: `${index * 50}ms` }}
                 >
-                  <item.icon className="h-5 w-5" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-semibold">{item.label}</span>
-                  <span className="text-xs text-gray-500 group-hover:text-gray-600">
-                    {item.description}
-                  </span>
-                </div>
-              </NavLink>
-            ))}
-          </nav>
+                  <div
+                    className={clsx(
+                      'p-2.5 rounded-lg transition-all duration-200',
+                      'group-[.bg-gradient-to-r]:bg-primary-100 group-[.bg-gradient-to-r]:text-primary-600',
+                      'bg-gray-100 text-gray-500 group-hover:bg-gray-200 group-hover:text-gray-700'
+                    )}
+                  >
+                    <item.icon className="h-5 w-5" />
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="font-semibold">{item.label}</span>
+                    <span className="text-xs text-gray-500 group-hover:text-gray-600">
+                      {item.description}
+                    </span>
+                  </div>
+                </NavLink>
+              ))}
+            </nav>
+          )}
 
           <div className="p-4 border-t border-gray-100">
             <div className="bg-gradient-to-r from-primary-50 to-secondary-50 rounded-xl p-4">

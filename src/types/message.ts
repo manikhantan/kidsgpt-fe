@@ -15,9 +15,29 @@ export interface Message {
 export interface ChatSession {
   id: string;
   childId: string;
+  title?: string;
   startedAt: string;
   endedAt?: string;
   messages: Message[];
+  lastMessageAt?: string;
+  messageCount?: number;
+}
+
+export interface ChatSessionSummary {
+  id: string;
+  title: string;
+  startedAt: string;
+  lastMessageAt: string;
+  messageCount: number;
+  preview?: string;
+}
+
+export interface PaginatedChatSessions {
+  sessions: ChatSessionSummary[];
+  total: number;
+  page: number;
+  pageSize: number;
+  hasMore: boolean;
 }
 
 export interface SendMessageRequest {
@@ -30,6 +50,8 @@ export interface SendMessageResponse {
   blocked: boolean;
   blockedReason?: string;
   allowedTopics?: string[];
+  sessionId?: string;
+  sessionTitle?: string;
 }
 
 export interface ChatHistoryResponse {
