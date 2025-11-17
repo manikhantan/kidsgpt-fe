@@ -10,6 +10,9 @@ import {
   ChatHistoryResponse,
   AnalyticsData,
   SendMessageResponse,
+  ChatSessionSummary,
+  PaginatedChatSessions,
+  ChatSession,
 } from '@/types';
 
 const baseQuery = fetchBaseQuery({
@@ -26,7 +29,7 @@ const baseQuery = fetchBaseQuery({
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery,
-  tagTypes: ['Children', 'ContentRules', 'ChatHistory', 'Messages', 'Analytics'],
+  tagTypes: ['Children', 'ContentRules', 'ChatHistory', 'Messages', 'Analytics', 'ChatSessions'],
   endpoints: (builder) => ({
     // Auth endpoints
     parentRegister: builder.mutation<
@@ -119,13 +122,13 @@ export const apiSlice = createApi({
     }),
 
     // Kid endpoints
-    sendMessage: builder.mutation<SendMessageResponse, string>({
-      query: (message) => ({
+    sendMessage: builder.mutation<SendMessageResponse, { message: string; sessionId?: string }>({
+      query: ({ message, sessionId }) => ({
         url: '/api/kid/chat',
         method: 'POST',
-        body: { message },
+        body: { message, sessionId },
       }),
-      invalidatesTags: ['Messages'],
+      invalidatesTags: ['Messages', 'ChatSessions'],
     }),
 
     getKidChatHistory: builder.query<ChatHistoryResponse, void>({
@@ -135,6 +138,31 @@ export const apiSlice = createApi({
 
     getCurrentSession: builder.query<{ sessionId: string; messages: [] }, void>({
       query: () => '/api/kid/current-session',
+    }),
+
+    // Chat sessions endpoints
+    getRecentChatSessions: builder.query<ChatSessionSummary[], number | void>({
+      query: (limit = 20) => `/api/kid/chat-sessions/recent?limit=${limit}`,
+      providesTags: ['ChatSessions'],
+    }),
+
+    getChatSessions: builder.query<PaginatedChatSessions, { page?: number; pageSize?: number }>({
+      query: ({ page = 1, pageSize = 15 }) =>
+        `/api/kid/chat-sessions?page=${page}&pageSize=${pageSize}`,
+      providesTags: ['ChatSessions'],
+    }),
+
+    getChatSession: builder.query<ChatSession, string>({
+      query: (sessionId) => `/api/kid/chat-sessions/${sessionId}`,
+      providesTags: (_result, _error, sessionId) => [{ type: 'ChatSessions', id: sessionId }],
+    }),
+
+    createChatSession: builder.mutation<ChatSession, void>({
+      query: () => ({
+        url: '/api/kid/chat-sessions',
+        method: 'POST',
+      }),
+      invalidatesTags: ['ChatSessions'],
     }),
   }),
 });
@@ -155,4 +183,9 @@ export const {
   useSendMessageMutation,
   useGetKidChatHistoryQuery,
   useGetCurrentSessionQuery,
+  useGetRecentChatSessionsQuery,
+  useGetChatSessionsQuery,
+  useGetChatSessionQuery,
+  useLazyGetChatSessionQuery,
+  useCreateChatSessionMutation,
 } = apiSlice;
