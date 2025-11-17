@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import MessageList from './MessageList';
-import ChatInput from './ChatInput';
+import MessageList from '@/components/shared/MessageList';
+import ChatInput from '@/components/shared/ChatInput';
+import LoadingDots from '@/components/shared/LoadingDots';
 import BlockedNotification from './BlockedNotification';
 import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
@@ -14,7 +15,7 @@ import {
   useCreateChatSessionMutation,
 } from '@/store/api/apiSlice';
 import { Message } from '@/types';
-import { Bot, MessageCircle } from 'lucide-react';
+import { MessageCircle } from 'lucide-react';
 
 const ChatInterface = () => {
   const dispatch = useAppDispatch();
@@ -126,22 +127,7 @@ const ChatInterface = () => {
           <BlockedNotification allowedTopics={blockedInfo.allowedTopics} />
         )}
 
-        {chatLoading && (
-          <div className="flex justify-start px-6 pb-3">
-            <div className="flex items-center gap-3 animate-slide-up">
-              <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
-                <Bot className="h-5 w-5 text-gray-600" />
-              </div>
-              <div className="bg-white rounded-2xl rounded-tl-md px-5 py-3.5 shadow-soft border border-gray-100">
-                <div className="flex gap-1.5">
-                  <span className="w-2.5 h-2.5 bg-primary-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }} />
-                  <span className="w-2.5 h-2.5 bg-primary-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }} />
-                  <span className="w-2.5 h-2.5 bg-primary-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }} />
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        {chatLoading && <LoadingDots />}
 
         <ChatInput onSend={handleSendMessage} isLoading={chatLoading} />
       </div>
