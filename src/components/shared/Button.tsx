@@ -27,33 +27,28 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
     ref
   ) => {
     const baseStyles =
-      'inline-flex items-center justify-center font-semibold transition-all duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 active:scale-[0.98] transform-gpu';
+      'inline-flex items-center justify-center font-medium transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50';
 
     const variantStyles = {
-      primary:
-        'bg-gradient-to-r from-primary-600 to-primary-700 text-white hover:from-primary-700 hover:to-primary-800 focus:ring-primary-500 shadow-soft hover:shadow-soft-lg hover:-translate-y-0.5',
+      primary: 'bg-accent text-white hover:bg-accent-hover focus:ring-accent/50',
       secondary:
-        'bg-gradient-to-r from-secondary-600 to-secondary-700 text-white hover:from-secondary-700 hover:to-secondary-800 focus:ring-secondary-500 shadow-soft hover:shadow-soft-lg hover:-translate-y-0.5',
-      danger:
-        'bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 focus:ring-red-500 shadow-soft hover:shadow-soft-lg hover:-translate-y-0.5',
-      ghost:
-        'bg-transparent text-gray-700 hover:bg-gray-100/80 hover:text-gray-900 focus:ring-gray-400 border border-transparent hover:border-gray-200/50',
+        'bg-surface-secondary text-text-primary hover:bg-surface-tertiary border border-border focus:ring-border',
+      danger: 'bg-error text-white hover:bg-error-dark focus:ring-error/50',
+      ghost: 'bg-transparent text-text-secondary hover:bg-surface-secondary hover:text-text-primary',
       outline:
-        'bg-white/80 backdrop-blur-sm text-primary-700 border-2 border-primary-200 hover:border-primary-400 hover:bg-primary-50/50 focus:ring-primary-500 shadow-soft',
+        'bg-transparent text-text-primary border border-border hover:bg-surface-secondary focus:ring-border',
     };
 
     const sizeStyles = {
-      sm: 'px-3.5 py-2 text-sm rounded-lg gap-1.5',
-      md: 'px-5 py-2.5 text-base rounded-xl gap-2',
-      lg: 'px-7 py-3.5 text-lg rounded-xl gap-2.5',
+      sm: 'px-3 py-1.5 text-sm rounded-md gap-1.5',
+      md: 'px-4 py-2.5 text-sm rounded-lg gap-2',
+      lg: 'px-6 py-3 text-base rounded-lg gap-2',
     };
 
     return (
       <button
         ref={ref}
-        className={twMerge(
-          clsx(baseStyles, variantStyles[variant], sizeStyles[size], className)
-        )}
+        className={twMerge(clsx(baseStyles, variantStyles[variant], sizeStyles[size], className))}
         disabled={disabled || isLoading}
         {...props}
       >

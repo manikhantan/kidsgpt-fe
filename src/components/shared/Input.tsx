@@ -16,10 +16,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full">
         {label && (
-          <label
-            htmlFor={inputId}
-            className="block text-sm font-semibold text-gray-700 mb-2"
-          >
+          <label htmlFor={inputId} className="block text-sm font-medium text-text-primary mb-1.5">
             {label}
           </label>
         )}
@@ -29,10 +26,10 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             id={inputId}
             className={twMerge(
               clsx(
-                'w-full rounded-xl border-2 bg-white/80 backdrop-blur-sm px-4 py-3 text-gray-900 placeholder-gray-400 transition-all duration-200 focus:outline-none disabled:bg-gray-50 disabled:cursor-not-allowed shadow-inner-soft',
+                'w-full rounded-lg border bg-surface px-4 py-2.5 text-text-primary placeholder-text-muted transition-colors duration-150 focus:outline-none disabled:bg-surface-secondary disabled:cursor-not-allowed',
                 error
-                  ? 'border-red-300 focus:border-red-500 focus:ring-4 focus:ring-red-100 pr-10'
-                  : 'border-gray-200 focus:border-primary-500 focus:ring-4 focus:ring-primary-100 hover:border-gray-300',
+                  ? 'border-error focus:border-error focus:ring-2 focus:ring-error/20 pr-10'
+                  : 'border-border focus:border-accent focus:ring-2 focus:ring-accent/20 hover:border-border-dark',
                 className
               )
             )}
@@ -40,18 +37,12 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           />
           {error && (
             <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-              <AlertCircle className="h-5 w-5 text-red-500" />
+              <AlertCircle className="h-4 w-4 text-error" />
             </div>
           )}
         </div>
-        {error && (
-          <p className="mt-2 text-sm text-red-600 flex items-center gap-1">
-            {error}
-          </p>
-        )}
-        {helperText && !error && (
-          <p className="mt-2 text-sm text-gray-500">{helperText}</p>
-        )}
+        {error && <p className="mt-1.5 text-sm text-error">{error}</p>}
+        {helperText && !error && <p className="mt-1.5 text-sm text-text-muted">{helperText}</p>}
       </div>
     );
   }

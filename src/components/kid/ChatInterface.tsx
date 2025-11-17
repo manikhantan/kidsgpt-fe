@@ -15,7 +15,7 @@ import {
   useCreateChatSessionMutation,
 } from '@/store/api/apiSlice';
 import { Message } from '@/types';
-import { MessageCircle } from 'lucide-react';
+import { Sparkles } from 'lucide-react';
 
 const ChatInterface = () => {
   const dispatch = useAppDispatch();
@@ -32,9 +32,6 @@ const ChatInterface = () => {
     allowedTopics: string[];
   }>({ show: false, allowedTopics: [] });
 
-  // Sessions are selected explicitly from the sidebar via setCurrentSession
-  // This ensures the correct session ID is always used
-
   const handleSendMessage = async (content: string) => {
     setBlockedInfo({ show: false, allowedTopics: [] });
 
@@ -49,24 +46,20 @@ const ChatInterface = () => {
     dispatch(setChatLoading(true));
 
     try {
-      // If no session exists, create one first
       let sessionId = currentSessionId;
-      // Validate sessionId is a non-empty string
       const hasValidSession = sessionId && typeof sessionId === 'string' && sessionId.trim() !== '';
 
       if (!hasValidSession) {
         const newSession = await createSession().unwrap();
         sessionId = newSession.id;
-        // Use setCurrentSession to atomically update session and clear old messages
         dispatch(
           setCurrentSession({
             id: newSession.id,
             title: newSession.title || 'New Chat',
-            messages: [userMessage], // Start fresh with just the user message
+            messages: [userMessage],
           })
         );
       } else {
-        // Add message to existing session
         dispatch(addMessage(userMessage));
       }
 
@@ -75,7 +68,7 @@ const ChatInterface = () => {
       if (response.was_blocked) {
         setBlockedInfo({
           show: true,
-          allowedTopics: [], // Backend doesn't provide this in the new format
+          allowedTopics: [],
         });
       } else if (response.assistant_message) {
         const assistantMessage: Message = {
@@ -87,7 +80,6 @@ const ChatInterface = () => {
         };
         dispatch(addMessage(assistantMessage));
 
-        // Update session title if returned
         if (response.session_title && response.session_title !== currentSessionTitle) {
           dispatch(setCurrentSessionTitle(response.session_title));
         }
@@ -95,7 +87,7 @@ const ChatInterface = () => {
     } catch (error) {
       const errorMessage: Message = {
         id: `error-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
-        content: 'Oops! Something went wrong. Please try again!',
+        content: 'Something went wrong. Please try again.',
         role: 'assistant',
         timestamp: new Date().toISOString(),
         status: 'error',
@@ -106,28 +98,34 @@ const ChatInterface = () => {
     }
   };
 
+  const showEmptyState = messages.length === 0 && !chatLoading;
+
   return (
-    <div className="flex flex-col h-full bg-gradient-to-br from-slate-50 via-white to-gray-50 rounded-2xl overflow-hidden border border-gray-100 shadow-soft">
-      {/* Session title header */}
-      {currentSessionTitle && (
-        <div className="bg-white/80 backdrop-blur-sm border-b border-gray-100 px-5 py-3">
-          <div className="flex items-center gap-2">
-            <MessageCircle className="h-4 w-4 text-primary-500" />
-            <h2 className="text-sm font-semibold text-gray-700 truncate">
-              {currentSessionTitle}
-            </h2>
-          </div>
-        </div>
-      )}
-
+    <div className="flex flex-col h-full bg-surface">
       <div className="flex-1 flex flex-col min-h-0">
-        <MessageList messages={messages} />
-
-        {blockedInfo.show && (
-          <BlockedNotification allowedTopics={blockedInfo.allowedTopics} />
+        {showEmptyState ? (
+          <div className="flex-1 flex items-center justify-center">
+            <div className="text-center max-w-md px-4">
+              <div className="w-16 h-16 rounded-2xl bg-surface-dark flex items-center justify-center mx-auto mb-6">
+                <Sparkles className="h-8 w-8 text-white" />
+              </div>
+              <h2 className="text-2xl font-semibold text-text-primary mb-2">
+                How can I help you today?
+              </h2>
+              <p className="text-text-secondary">
+                Ask me anything! I'm here to help with homework, answer questions, or just have a conversation.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div className="flex-1 overflow-y-auto">
+            <MessageList messages={messages} />
+            {blockedInfo.show && (
+              <BlockedNotification allowedTopics={blockedInfo.allowedTopics} />
+            )}
+            {chatLoading && <LoadingDots />}
+          </div>
         )}
-
-        {chatLoading && <LoadingDots />}
 
         <ChatInput onSend={handleSendMessage} isLoading={chatLoading} />
       </div>

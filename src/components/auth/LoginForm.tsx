@@ -1,6 +1,5 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Mail, Lock } from 'lucide-react';
 import Input from '@/components/shared/Input';
 import Button from '@/components/shared/Button';
 import {
@@ -46,42 +45,29 @@ const LoginForm = ({ type, onSubmit, isLoading = false, error }: LoginFormProps)
   return (
     <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+        <div className="bg-error-light border border-error/20 text-error-dark px-4 py-3 rounded-lg text-sm">
           {error}
         </div>
       )}
 
-      <div className="relative">
-        <Mail className="absolute left-3 top-9 h-5 w-5 text-gray-400" />
-        <Input
-          {...register('email' as keyof ParentLoginFormData)}
-          type="email"
-          label="Email"
-          placeholder="Enter your email"
-          error={(errors as { email?: { message?: string } }).email?.message}
-          className="pl-10"
-        />
-      </div>
+      <Input
+        {...register('email' as keyof ParentLoginFormData)}
+        type="email"
+        label="Email"
+        placeholder="you@example.com"
+        error={(errors as { email?: { message?: string } }).email?.message}
+      />
 
-      <div className="relative">
-        <Lock className="absolute left-3 top-9 h-5 w-5 text-gray-400" />
-        <Input
-          {...register('password')}
-          type="password"
-          label="Password"
-          placeholder="Enter your password"
-          error={errors.password?.message}
-          className="pl-10"
-        />
-      </div>
+      <Input
+        {...register('password')}
+        type="password"
+        label="Password"
+        placeholder="Your password"
+        error={errors.password?.message}
+      />
 
-      <Button
-        type="submit"
-        className="w-full"
-        isLoading={isLoading}
-        disabled={isLoading}
-      >
-        {type === 'parent' ? 'Sign In' : 'Start Chatting'}
+      <Button type="submit" className="w-full" isLoading={isLoading} disabled={isLoading}>
+        {type === 'parent' ? 'Sign in' : 'Sign in'}
       </Button>
     </form>
   );

@@ -1,7 +1,6 @@
-import { Users, MessageSquare, ShieldAlert, Activity, ArrowRight, TrendingUp } from 'lucide-react';
+import { Users, MessageSquare, ShieldAlert, Activity, ChevronRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Card from '@/components/shared/Card';
-import Button from '@/components/shared/Button';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
 import { useGetChildrenQuery } from '@/store/api/apiSlice';
 import { useAuth } from '@/hooks/useAuth';
@@ -14,60 +13,66 @@ const Dashboard = () => {
 
   const stats = [
     {
-      label: 'Total Children',
+      label: 'Children',
       value: children?.length || 0,
       icon: Users,
-      gradient: 'from-blue-500 to-blue-600',
-      bgGradient: 'from-blue-50 to-blue-100',
-      iconBg: 'bg-blue-100',
-      iconColor: 'text-blue-600',
+      color: 'text-info',
+      bgColor: 'bg-info-light',
     },
     {
-      label: 'Total Messages',
+      label: 'Messages',
       value: '-',
       icon: MessageSquare,
-      gradient: 'from-emerald-500 to-emerald-600',
-      bgGradient: 'from-emerald-50 to-emerald-100',
-      iconBg: 'bg-emerald-100',
-      iconColor: 'text-emerald-600',
+      color: 'text-success',
+      bgColor: 'bg-success-light',
     },
     {
-      label: 'Blocked Attempts',
+      label: 'Blocked',
       value: '-',
       icon: ShieldAlert,
-      gradient: 'from-orange-500 to-orange-600',
-      bgGradient: 'from-orange-50 to-orange-100',
-      iconBg: 'bg-orange-100',
-      iconColor: 'text-orange-600',
+      color: 'text-warning',
+      bgColor: 'bg-warning-light',
     },
     {
-      label: 'Active Today',
+      label: 'Active',
       value: children?.length || 0,
       icon: Activity,
-      gradient: 'from-purple-500 to-purple-600',
-      bgGradient: 'from-purple-50 to-purple-100',
-      iconBg: 'bg-purple-100',
-      iconColor: 'text-purple-600',
+      color: 'text-accent',
+      bgColor: 'bg-accent-light',
+    },
+  ];
+
+  const quickActions = [
+    {
+      label: 'Manage Children',
+      description: 'Add or edit child accounts',
+      icon: Users,
+      route: ROUTES.PARENT_CHILDREN,
+    },
+    {
+      label: 'Content Control',
+      description: 'Set safety filters and restrictions',
+      icon: ShieldAlert,
+      route: ROUTES.PARENT_CONTENT_CONTROL,
+    },
+    {
+      label: 'Chat History',
+      description: 'Review past conversations',
+      icon: MessageSquare,
+      route: ROUTES.PARENT_CHAT_HISTORY,
     },
   ];
 
   return (
-    <div className="space-y-8 animate-fade-in">
-      {/* Welcome Section */}
-      <div className="bg-gradient-to-r from-primary-600 via-primary-700 to-secondary-600 rounded-3xl p-8 text-white shadow-soft-xl relative overflow-hidden">
-        <div className="absolute inset-0 opacity-50" style={{ backgroundImage: "url(\"data:image/svg+xml,%3Csvg width='30' height='30' viewBox='0 0 30 30' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='2' cy='2' r='2' fill='white' fill-opacity='0.1'/%3E%3C/svg%3E\")" }} />
-        <div className="relative">
-          <div className="flex items-center gap-2 mb-2">
-            <TrendingUp className="h-5 w-5 text-primary-200" />
-            <span className="text-sm font-medium text-primary-200">Dashboard Overview</span>
-          </div>
-          <h1 className="text-3xl font-bold">
-            Welcome back, {user?.name}!
-          </h1>
-          <p className="text-primary-100 mt-2 text-lg">
-            Here's an overview of your children's activity and safety status.
-          </p>
-        </div>
+    <div className="max-w-6xl mx-auto p-6 space-y-6">
+      {/* Header */}
+      <div className="mb-8">
+        <h1 className="text-2xl font-semibold text-text-primary">
+          Welcome back, {user?.name}
+        </h1>
+        <p className="text-text-secondary mt-1">
+          Here's what's happening with your children's activity.
+        </p>
       </div>
 
       {isLoading ? (
@@ -77,145 +82,97 @@ const Dashboard = () => {
       ) : (
         <>
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-            {stats.map((stat, index) => (
-              <Card
-                key={stat.label}
-                padding="lg"
-                variant="glass"
-                className="animate-slide-up"
-                style={{ animationDelay: `${index * 100}ms` } as React.CSSProperties}
-              >
-                <div className="flex items-start justify-between">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            {stats.map((stat) => (
+              <Card key={stat.label} padding="md" variant="flat" hover={false}>
+                <div className="flex items-center gap-3">
+                  <div className={`p-2.5 rounded-lg ${stat.bgColor}`}>
+                    <stat.icon className={`h-5 w-5 ${stat.color}`} />
+                  </div>
                   <div>
-                    <p className="text-sm font-medium text-gray-500 mb-1">{stat.label}</p>
-                    <p className="text-3xl font-bold text-gray-900">{stat.value}</p>
+                    <p className="text-2xl font-semibold text-text-primary">{stat.value}</p>
+                    <p className="text-sm text-text-secondary">{stat.label}</p>
                   </div>
-                  <div className={`p-3 rounded-xl ${stat.iconBg} ${stat.iconColor}`}>
-                    <stat.icon className="h-6 w-6" />
-                  </div>
-                </div>
-                <div className={`mt-4 h-1.5 rounded-full bg-gradient-to-r ${stat.bgGradient}`}>
-                  <div className={`h-full w-3/4 rounded-full bg-gradient-to-r ${stat.gradient}`} />
                 </div>
               </Card>
             ))}
           </div>
 
-          {/* Main Content Grid */}
+          {/* Main Content */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {/* Quick Actions */}
-            <Card padding="lg" variant="elevated" hover={false}>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-900">
-                  Quick Actions
-                </h2>
-                <span className="text-xs font-medium text-gray-500 bg-gray-100 px-3 py-1 rounded-full">
-                  3 actions
-                </span>
+            <Card padding="none" variant="flat" hover={false}>
+              <div className="p-5 border-b border-border">
+                <h2 className="text-lg font-semibold text-text-primary">Quick Actions</h2>
               </div>
-              <div className="space-y-3">
-                <Button
-                  variant="ghost"
-                  className="w-full justify-between group hover:bg-primary-50 hover:border-primary-100"
-                  onClick={() => navigate(ROUTES.PARENT_CHILDREN)}
-                  rightIcon={<ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
-                      <Users className="h-5 w-5" />
+              <div className="divide-y divide-border">
+                {quickActions.map((action) => (
+                  <button
+                    key={action.label}
+                    onClick={() => navigate(action.route)}
+                    className="w-full flex items-center justify-between p-4 hover:bg-surface-secondary transition-colors text-left group"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="p-2 rounded-lg bg-surface-secondary group-hover:bg-surface-tertiary transition-colors">
+                        <action.icon className="h-5 w-5 text-text-secondary" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-text-primary">{action.label}</p>
+                        <p className="text-xs text-text-muted">{action.description}</p>
+                      </div>
                     </div>
-                    <span className="font-medium">Manage Children</span>
-                  </div>
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-between group hover:bg-primary-50 hover:border-primary-100"
-                  onClick={() => navigate(ROUTES.PARENT_CONTENT_CONTROL)}
-                  rightIcon={<ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-orange-100 rounded-lg text-orange-600">
-                      <ShieldAlert className="h-5 w-5" />
-                    </div>
-                    <span className="font-medium">Content Control</span>
-                  </div>
-                </Button>
-                <Button
-                  variant="ghost"
-                  className="w-full justify-between group hover:bg-primary-50 hover:border-primary-100"
-                  onClick={() => navigate(ROUTES.PARENT_CHAT_HISTORY)}
-                  rightIcon={<ArrowRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity" />}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="p-2 bg-green-100 rounded-lg text-green-600">
-                      <MessageSquare className="h-5 w-5" />
-                    </div>
-                    <span className="font-medium">View Chat History</span>
-                  </div>
-                </Button>
+                    <ChevronRight className="h-4 w-4 text-text-muted group-hover:text-text-secondary transition-colors" />
+                  </button>
+                ))}
               </div>
             </Card>
 
-            {/* Recent Activity */}
-            <Card padding="lg" variant="elevated" hover={false}>
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-bold text-gray-900">
-                  Recent Activity
-                </h2>
+            {/* Children Activity */}
+            <Card padding="none" variant="flat" hover={false}>
+              <div className="p-5 border-b border-border flex items-center justify-between">
+                <h2 className="text-lg font-semibold text-text-primary">Children</h2>
                 {children && children.length > 0 && (
-                  <span className="text-xs font-medium text-primary-600 bg-primary-50 px-3 py-1 rounded-full">
-                    {children.length} children
+                  <span className="text-xs font-medium text-text-muted bg-surface-secondary px-2.5 py-1 rounded-full">
+                    {children.length} total
                   </span>
                 )}
               </div>
               {children?.length === 0 ? (
-                <div className="text-center py-12 bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl">
-                  <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <Users className="h-8 w-8 text-gray-400" />
+                <div className="p-8 text-center">
+                  <div className="w-12 h-12 bg-surface-secondary rounded-full flex items-center justify-center mx-auto mb-3">
+                    <Users className="h-6 w-6 text-text-muted" />
                   </div>
-                  <p className="text-gray-600 font-medium mb-1">
-                    No activity yet
-                  </p>
-                  <p className="text-sm text-gray-500 mb-4">
-                    Add a child to get started!
-                  </p>
-                  <Button
+                  <p className="text-sm font-medium text-text-primary mb-1">No children added</p>
+                  <p className="text-xs text-text-muted mb-4">Add a child to get started</p>
+                  <button
                     onClick={() => navigate(ROUTES.PARENT_CHILDREN)}
-                    size="sm"
+                    className="text-sm font-medium text-accent hover:text-accent-hover transition-colors"
                   >
-                    Add Child
-                  </Button>
+                    Add your first child
+                  </button>
                 </div>
               ) : (
-                <div className="space-y-3">
-                  {children?.slice(0, 5).map((child, index) => (
+                <div className="divide-y divide-border">
+                  {children?.slice(0, 5).map((child) => (
                     <div
                       key={child.id}
-                      className="flex items-center justify-between p-4 bg-gradient-to-r from-gray-50 to-gray-100/50 rounded-xl hover:from-primary-50 hover:to-primary-100/30 transition-all duration-200 group animate-slide-up"
-                      style={{ animationDelay: `${index * 100}ms` }}
+                      className="flex items-center justify-between p-4 hover:bg-surface-secondary transition-colors"
                     >
                       <div className="flex items-center gap-3">
-                        <div className="bg-gradient-to-br from-primary-500 to-primary-600 p-2.5 rounded-xl shadow-soft">
-                          <Users className="h-4 w-4 text-white" />
+                        <div className="w-9 h-9 rounded-full bg-accent flex items-center justify-center text-white text-sm font-medium">
+                          {child.name.charAt(0).toUpperCase()}
                         </div>
                         <div>
-                          <span className="font-semibold text-gray-900 block">{child.name}</span>
-                          <span className="text-xs text-gray-500">Active user</span>
+                          <p className="text-sm font-medium text-text-primary">{child.name}</p>
+                          <p className="text-xs text-text-muted">Active</p>
                         </div>
                       </div>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() =>
-                          navigate(
-                            `${ROUTES.PARENT_CHAT_HISTORY}?childId=${child.id}`
-                          )
-                        }
-                        className="opacity-70 group-hover:opacity-100"
+                      <button
+                        onClick={() => navigate(`${ROUTES.PARENT_CHAT_HISTORY}?childId=${child.id}`)}
+                        className="text-xs font-medium text-accent hover:text-accent-hover transition-colors"
                       >
-                        View
-                      </Button>
+                        View activity
+                      </button>
                     </div>
                   ))}
                 </div>

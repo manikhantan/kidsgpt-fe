@@ -1,4 +1,4 @@
-import { AlertTriangle, Lightbulb } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 
 interface BlockedNotificationProps {
   allowedTopics?: string[];
@@ -6,35 +6,34 @@ interface BlockedNotificationProps {
 
 const BlockedNotification = ({ allowedTopics = [] }: BlockedNotificationProps) => {
   return (
-    <div className="bg-orange-50 border border-orange-200 rounded-xl p-4 my-4 mx-auto max-w-lg">
-      <div className="flex items-start gap-3">
-        <AlertTriangle className="h-6 w-6 text-orange-500 flex-shrink-0" />
-        <div>
-          <h3 className="text-lg font-semibold text-orange-800">
-            Oops! That topic isn't available right now.
-          </h3>
-          <p className="text-orange-700 mt-2">
-            Don't worry! There are lots of other fun things we can talk about!
-          </p>
+    <div className="message-container-assistant">
+      <div className="message-content">
+        <div className="message-avatar bg-warning-light">
+          <AlertTriangle className="h-4 w-4 text-warning-dark" />
+        </div>
+        <div className="flex-1">
+          <div className="bg-warning-light rounded-lg p-4">
+            <h3 className="text-sm font-semibold text-warning-dark mb-1">Content Blocked</h3>
+            <p className="text-sm text-warning-dark/90">
+              This topic has been restricted. Try asking about something else.
+            </p>
 
-          {allowedTopics.length > 0 && (
-            <div className="mt-4">
-              <div className="flex items-center gap-2 text-orange-800 mb-2">
-                <Lightbulb className="h-5 w-5" />
-                <span className="font-medium">Try asking about:</span>
+            {allowedTopics.length > 0 && (
+              <div className="mt-3">
+                <p className="text-xs font-medium text-warning-dark mb-2">Suggested topics:</p>
+                <div className="flex flex-wrap gap-2">
+                  {allowedTopics.map((topic) => (
+                    <span
+                      key={topic}
+                      className="bg-warning/10 text-warning-dark px-2.5 py-1 rounded-md text-xs font-medium"
+                    >
+                      {topic}
+                    </span>
+                  ))}
+                </div>
               </div>
-              <div className="flex flex-wrap gap-2">
-                {allowedTopics.map((topic) => (
-                  <span
-                    key={topic}
-                    className="bg-orange-100 text-orange-800 px-3 py-1 rounded-full text-sm font-medium"
-                  >
-                    {topic}
-                  </span>
-                ))}
-              </div>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </div>
