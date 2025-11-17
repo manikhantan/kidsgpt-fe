@@ -5,7 +5,6 @@ import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import { setCurrentSession } from '@/store/slices/chatSlice';
 import {
   useGetRecentChatSessionsQuery,
-  useCreateChatSessionMutation,
   useLazyGetChatSessionQuery,
 } from '@/store/api/apiSlice';
 import { ROUTES } from '@/utils/constants';
@@ -22,7 +21,7 @@ interface ChatSessionsListProps {
 const ChatSessionsList = ({ onSessionClick, maxItems = 20 }: ChatSessionsListProps) => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
-  const { currentSessionId } = useAppSelector((state) => state.chat);
+  const { currentSessionId, messages } = useAppSelector((state) => state.chat);
 
   const {
     data: sessions,
@@ -30,24 +29,30 @@ const ChatSessionsList = ({ onSessionClick, maxItems = 20 }: ChatSessionsListPro
     error,
   } = useGetRecentChatSessionsQuery(maxItems);
 
-  const [createSession, { isLoading: isCreating }] = useCreateChatSessionMutation();
   const [getSession] = useLazyGetChatSessionQuery();
 
-  const handleNewChat = async () => {
-    try {
-      const newSession = await createSession().unwrap();
-      dispatch(
-        setCurrentSession({
-          id: newSession.id,
-          title: newSession.title || 'New Chat',
-          messages: [],
-        })
-      );
+  // Check if current conversation is empty (no messages sent yet)
+  const isCurrentConversationEmpty = messages.length === 0;
+
+  const handleNewChat = () => {
+    // Don't create a new session if current conversation is already empty
+    if (isCurrentConversationEmpty) {
+      // Just navigate to chat page, no need to create a new session
       navigate(ROUTES.KID_CHAT);
       onSessionClick?.();
-    } catch (err) {
-      console.error('Failed to create new session:', err);
+      return;
     }
+
+    // Clear the current session - a new backend session will be created when user sends first message
+    dispatch(
+      setCurrentSession({
+        id: null,
+        title: null,
+        messages: [],
+      })
+    );
+    navigate(ROUTES.KID_CHAT);
+    onSessionClick?.();
   };
 
   const handleSessionClick = async (session: ChatSessionSummary) => {
@@ -97,7 +102,8 @@ const ChatSessionsList = ({ onSessionClick, maxItems = 20 }: ChatSessionsListPro
           className="w-full shadow-soft-lg"
           leftIcon={<Plus className="h-4 w-4" />}
           onClick={handleNewChat}
-          isLoading={isCreating}
+          disabled={isCurrentConversationEmpty}
+          title={isCurrentConversationEmpty ? 'Send a message first to start a new chat' : undefined}
         >
           New Chat
         </Button>
