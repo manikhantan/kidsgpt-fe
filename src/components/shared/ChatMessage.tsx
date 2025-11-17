@@ -68,7 +68,7 @@ const ChatMessage = ({ message, compact = false }: ChatMessageProps) => {
           {isBlocked ? (
             <AlertTriangle className="h-4 w-4 text-warning-dark" />
           ) : isUser ? (
-            'U'
+            <User className="h-4 w-4" />
           ) : (
             <Bot className="h-4 w-4" />
           )}
