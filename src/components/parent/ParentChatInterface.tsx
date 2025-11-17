@@ -30,6 +30,7 @@ const ParentChatInterface = () => {
 
     try {
       const response = await sendMessage({ message: content, sessionId: currentSessionId || undefined }).unwrap();
+      console.log('Parent chat API response:', response);
 
       // Update session info if this is a new session
       if (response.session_id && !currentSessionId) {
@@ -47,8 +48,10 @@ const ParentChatInterface = () => {
         timestamp: new Date().toISOString(),
         status: 'sent',
       };
+      console.log('Adding assistant message:', assistantMessage);
       dispatch(addMessage(assistantMessage));
     } catch (err) {
+      console.error('Parent chat error:', err);
       setError('Failed to send message. Please try again.');
       const errorMessage: Message = {
         id: `error-${Date.now()}`,
