@@ -39,27 +39,29 @@ const ChatInterface = () => {
   const showEmptyState = messages.length === 0 && !isStreaming;
 
   return (
-    <div className="flex flex-col h-full bg-surface">
+    <div className="flex flex-col h-full">
       <div className="flex-1 flex flex-col min-h-0">
         {showEmptyState ? (
-          <div className="flex-1 flex items-center justify-center">
-            <div className="text-center max-w-md px-4">
-              <div className="w-16 h-16 rounded-2xl bg-surface-dark flex items-center justify-center mx-auto mb-6">
-                <Sparkles className="h-8 w-8 text-white" />
+          <div className="flex-1 flex items-center justify-center bg-surface">
+            <div className="text-center max-w-2xl mx-auto px-6">
+              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-surface-dark to-gray-800 flex items-center justify-center mx-auto mb-8 shadow-lg">
+                <Sparkles className="h-10 w-10 text-white" />
               </div>
-              <h2 className="text-2xl font-semibold text-text-primary mb-2">
+              <h2 className="text-3xl font-semibold text-text-primary mb-3 tracking-tight">
                 How can I help you today?
               </h2>
-              <p className="text-text-secondary">
+              <p className="text-base text-text-secondary leading-relaxed">
                 Ask me anything! I'm here to help with homework, answer questions, or just have a conversation.
               </p>
             </div>
           </div>
         ) : (
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto scrollbar-thin">
             <MessageList messages={messages} streamingMessageId={streamingMessageId} />
             {blockedInfo.show && (
-              <BlockedNotification allowedTopics={blockedInfo.allowedTopics} />
+              <div className="max-w-3xl mx-auto px-6 pb-4">
+                <BlockedNotification allowedTopics={blockedInfo.allowedTopics} />
+              </div>
             )}
           </div>
         )}

@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import { MessageSquare } from 'lucide-react';
-import { clsx } from 'clsx';
 import { useAppSelector } from '@/store/hooks';
 import { useGetRecentChatSessionsQuery } from '@/store/api/apiSlice';
 import { ROUTES } from '@/utils/constants';
@@ -82,21 +81,16 @@ const ChatSessionsList = ({ onSessionClick, maxItems = 20 }: ChatSessionsListPro
               <button
                 key={session.id}
                 onClick={() => handleSessionClick(session)}
-                className={clsx(
-                  'w-full text-left px-3 py-2.5 rounded-lg transition-colors duration-150 group relative',
+                className={
                   currentSessionId === session.id
-                    ? 'bg-sidebar-hover'
-                    : 'hover:bg-sidebar-hover'
-                )}
+                    ? 'sidebar-chat-item-active w-full text-left'
+                    : 'sidebar-chat-item w-full text-left'
+                }
               >
-                <div className="flex items-center gap-3">
-                  <MessageSquare className="h-4 w-4 text-sidebar-text-muted flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm text-sidebar-text truncate">
-                      {truncateText(session.title, 28)}
-                    </div>
-                  </div>
-                </div>
+                <MessageSquare className="h-4 w-4 flex-shrink-0" />
+                <span className="sidebar-chat-title">
+                  {truncateText(session.title, 28)}
+                </span>
               </button>
             ))}
           </div>
