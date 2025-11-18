@@ -1,10 +1,7 @@
-import { useEffect } from 'react';
 import MessageList from '@/components/shared/MessageList';
 import ChatInput from '@/components/shared/ChatInput';
-import { useAppSelector, useAppDispatch } from '@/store/hooks';
+import { useAppSelector } from '@/store/hooks';
 import { useStreamingChat } from '@/hooks/useStreamingChat';
-import { useLazyGetParentChatSessionQuery } from '@/store/api/apiSlice';
-import { setCurrentSession } from '@/store/slices/chatSlice';
 
 const ParentChatInterface = () => {
   const {
@@ -12,32 +9,7 @@ const ParentChatInterface = () => {
     isStreaming,
     streamingMessageId,
   } = useAppSelector((state) => state.chat);
-  const dispatch = useAppDispatch();
   const { sendStreamingMessage } = useStreamingChat('parent');
-  const [getSession] = useLazyGetParentChatSessionQuery();
-
-  // Load session messages if we have a persisted session ID but no messages
-  useEffect(() => {
-    const loadPersistedSession = async () => {
-      if (currentSessionId && messages.length === 0 && !isStreaming) {
-        try {
-          const fullSession = await getSession(currentSessionId).unwrap();
-          dispatch(
-            setCurrentSession({
-              id: fullSession.id,
-              title: fullSession.title || currentSessionTitle,
-              messages: fullSession.messages,
-            })
-          );
-        } catch (err) {
-          console.error('Failed to load persisted session:', err);
-          // If session fails to load, clear it to allow starting fresh
-          dispatch(setCurrentSession({ id: null, title: null, messages: [] }));
-        }
-      }
-    };
-    loadPersistedSession();
-  }, [currentSessionId, messages.length, isStreaming, getSession, dispatch, currentSessionTitle]);
 
   const handleSendMessage = async (content: string) => {
     // Use streaming chat
