@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import MessageList from '@/components/shared/MessageList';
 import ChatInput from '@/components/shared/ChatInput';
 import BlockedNotification from './BlockedNotification';
@@ -17,6 +17,7 @@ const ChatInterface = () => {
     show: boolean;
     allowedTopics: string[];
   }>({ show: false, allowedTopics: [] });
+  const scrollContainerRef = useRef<HTMLDivElement>(null);
 
   const handleSendMessage = async (content: string) => {
     setBlockedInfo({ show: false, allowedTopics: [] });
@@ -55,8 +56,8 @@ const ChatInterface = () => {
             </div>
           </div>
         ) : (
-          <div className="flex-1 overflow-y-auto scrollbar-thin">
-            <MessageList messages={messages} streamingMessageId={streamingMessageId} />
+          <div ref={scrollContainerRef} className="flex-1 overflow-y-auto scrollbar-thin">
+            <MessageList messages={messages} streamingMessageId={streamingMessageId} scrollContainerRef={scrollContainerRef} />
             {blockedInfo.show && (
               <div className="max-w-3xl mx-auto px-6 pb-4">
                 <BlockedNotification allowedTopics={blockedInfo.allowedTopics} />
