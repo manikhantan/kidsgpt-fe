@@ -55,7 +55,7 @@ export function useStreamingChat(userRole: 'kid' | 'parent' = 'kid') {
 
       // Include session_id if we have one
       if (currentSessionId) {
-        request.session_id = currentSessionId;
+        request.sessionId = currentSessionId;
       }
 
       // Create placeholder for assistant message

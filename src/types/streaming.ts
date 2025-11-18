@@ -93,5 +93,5 @@ export interface StreamingCallbacks {
  */
 export interface StreamingChatRequest {
   message: string;
-  session_id?: string;
+  sessionId?: string;
 }
