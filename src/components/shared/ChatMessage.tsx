@@ -25,13 +25,12 @@ const ChatMessage = ({ message, compact = false, isStreaming = false }: ChatMess
     return (
       <div className={`flex gap-3 py-3 ${isUser ? 'flex-row-reverse' : ''}`}>
         <div
-          className={`w-6 h-6 rounded-sm flex-shrink-0 flex items-center justify-center text-xs font-medium ${
-            isBlocked
-              ? 'bg-warning-light text-warning-dark'
-              : isUser
+          className={`w-6 h-6 rounded-sm flex-shrink-0 flex items-center justify-center text-xs font-medium ${isBlocked
+            ? 'bg-warning-light text-warning-dark'
+            : isUser
               ? 'bg-accent text-white'
               : 'bg-surface-dark text-white'
-          }`}
+            }`}
         >
           {isBlocked ? (
             <AlertTriangle className="h-3 w-3" />
@@ -53,19 +52,17 @@ const ChatMessage = ({ message, compact = false, isStreaming = false }: ChatMess
 
   return (
     <div
-      className={`message-animate group ${
-        isUser ? 'message-container-user' : 'message-container-assistant'
-      }`}
+      className={`message-animate group ${isUser ? 'message-container-user' : 'message-container-assistant'
+        }`}
     >
       <div className="message-content">
         <div
-          className={`message-avatar ${
-            isBlocked
-              ? 'bg-warning-light'
-              : isUser
+          className={`message-avatar ${isBlocked
+            ? 'bg-warning-light'
+            : isUser
               ? 'message-avatar-user'
               : 'message-avatar-assistant'
-          }`}
+            }`}
         >
           {isBlocked ? (
             <AlertTriangle className="h-4 w-4 text-warning-dark" />

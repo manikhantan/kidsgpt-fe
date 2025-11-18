@@ -1,73 +1,38 @@
 import { YouTubeVideoSuggestion } from '@/types';
-import { Play, Youtube } from 'lucide-react';
-import { useState } from 'react';
+import { Youtube } from 'lucide-react';
 
 interface VideoSuggestionProps {
   video: YouTubeVideoSuggestion;
 }
 
 const VideoSuggestion = ({ video }: VideoSuggestionProps) => {
-  const [imageError, setImageError] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-
-  const handleClick = () => {
-    window.open(video.url, '_blank', 'noopener,noreferrer');
-  };
-
-  const handleImageError = () => {
-    setImageError(true);
-  };
-
   return (
-    <div className="video-suggestion-card mt-4 animate-fade-in">
-      <div className="video-header">
+    <div className="video-suggestion-card mt-4 animate-fade-in overflow-hidden rounded-xl shadow-sm border border-surface-tertiary bg-surface-secondary">
+      <div className="video-header p-3 flex items-center gap-2 border-b border-surface-tertiary/50 bg-surface-tertiary/30">
         <Youtube className="h-5 w-5 text-red-500" />
-        <h4 className="text-sm font-semibold text-white">Video for You!</h4>
+        <h4 className="text-sm font-semibold text-text-primary">Video for You!</h4>
       </div>
 
-      <button
-        onClick={handleClick}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-        className="video-link w-full text-left"
-        aria-label={`Watch video: ${video.title}`}
-      >
-        <div className="video-thumbnail-wrapper">
-          {!imageError ? (
-            <img
-              src={video.thumbnail_url}
-              alt={video.title}
-              className="video-thumbnail"
-              loading="lazy"
-              onError={handleImageError}
-            />
-          ) : (
-            <div className="video-thumbnail-placeholder">
-              <Youtube className="h-12 w-12 text-gray-400" />
-            </div>
-          )}
-          <div className={`play-button-overlay ${isHovered ? 'opacity-100 scale-110' : 'opacity-90'}`}>
-            <div className="play-button-circle">
-              <Play className="h-6 w-6 text-white fill-white" />
-            </div>
-          </div>
-        </div>
+      <div className="relative w-full aspect-video bg-black">
+        <iframe
+          width="100%"
+          height="100%"
+          src={`https://www.youtube.com/embed/${video.video_id}`}
+          title={video.title}
+          frameBorder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          className="absolute top-0 left-0 w-full h-full"
+        />
+      </div>
 
-        <div className="video-info">
-          <h5 className="video-title">{video.title}</h5>
-          <p className="video-channel">{video.channel_title}</p>
-        </div>
-      </button>
-
-      <div className="video-cta">
-        <button
-          onClick={handleClick}
-          className="watch-button"
-          aria-label="Watch video on YouTube"
-        >
-          <Play className="h-4 w-4" />
-          <span>Watch Video</span>
-        </button>
+      <div className="p-3 bg-surface-secondary">
+        <h5 className="text-sm font-medium text-text-primary line-clamp-2 mb-1">
+          {video.title}
+        </h5>
+        <p className="text-xs text-text-secondary">
+          {video.channel_title}
+        </p>
       </div>
     </div>
   );
