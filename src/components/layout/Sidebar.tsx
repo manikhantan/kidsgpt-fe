@@ -14,6 +14,8 @@ import { ROUTES } from '@/utils/constants';
 import { useAppSelector } from '@/store/hooks';
 import ChatSessionsList from '@/components/chat/ChatSessionsList';
 import ParentChatSessionsList from '@/components/parent/ParentChatSessionsList';
+import { useCreateNewChat } from '@/hooks/useCreateNewChat';
+import { useCreateNewParentChat } from '@/hooks/useCreateNewParentChat';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -68,6 +70,18 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     location.pathname === ROUTES.PARENT_ALL_CHATS
   );
 
+  // Hooks for creating new chats
+  const { createNewChat: createNewKidChat } = useCreateNewChat({ onSuccess: onClose });
+  const { createNewChat: createNewParentChat } = useCreateNewParentChat({ onSuccess: onClose });
+
+  const handleNewChat = () => {
+    if (isParent) {
+      createNewParentChat();
+    } else if (isKid) {
+      createNewKidChat();
+    }
+  };
+
   return (
     <>
       {/* Mobile overlay */}
@@ -88,7 +102,10 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       >
         {/* Header */}
         <div className="flex items-center justify-between p-3 h-14">
-          <button className="flex items-center gap-2 flex-1 p-2 rounded-lg hover:bg-sidebar-hover transition-colors">
+          <button
+            onClick={handleNewChat}
+            className="flex items-center gap-2 flex-1 p-2 rounded-lg hover:bg-sidebar-hover transition-colors"
+          >
             <Plus className="h-4 w-4 text-sidebar-text" />
             <span className="text-sm text-sidebar-text">New chat</span>
           </button>
