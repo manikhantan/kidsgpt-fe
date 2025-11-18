@@ -1,20 +1,41 @@
 import { Message } from '@/types';
 import ChatMessage from './ChatMessage';
-import { useAutoScroll } from '@/hooks/useAutoScroll';
+import { useEffect, useRef } from 'react';
 
 interface MessageListProps {
   messages: Message[];
   streamingMessageId?: string | null;
+  scrollContainerRef: React.RefObject<HTMLDivElement>;
 }
 
-const MessageList = ({ messages, streamingMessageId }: MessageListProps) => {
-  const scrollRef = useAutoScroll<HTMLDivElement>([messages]);
+const MessageList = ({ messages, streamingMessageId, scrollContainerRef }: MessageListProps) => {
+  const messageRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+
+  useEffect(() => {
+    if (messages.length === 0 || !scrollContainerRef.current) return;
+
+    const lastMessage = messages[messages.length - 1];
+
+    // If the last message is from the user, scroll to position it at the top
+    if (lastMessage.role === 'user') {
+      const messageElement = messageRefs.current.get(lastMessage.id);
+      if (messageElement) {
+        // Scroll the message into view at the top of the container
+        messageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    }
+  }, [messages, scrollContainerRef]);
+
+  const setMessageRef = (id: string, element: HTMLDivElement | null) => {
+    if (element) {
+      messageRefs.current.set(id, element);
+    } else {
+      messageRefs.current.delete(id);
+    }
+  };
 
   return (
-    <div
-      ref={scrollRef}
-      className="w-full"
-    >
+    <div className="w-full">
       {messages.length === 0 ? (
         <div className="flex flex-col items-center justify-center h-full text-center py-20">
           <div className="w-16 h-16 bg-surface-secondary rounded-2xl flex items-center justify-center mb-6 shadow-sm">
@@ -30,11 +51,12 @@ const MessageList = ({ messages, streamingMessageId }: MessageListProps) => {
         </div>
       ) : (
         messages.map((message) => (
-          <ChatMessage
-            key={message.id}
-            message={message}
-            isStreaming={streamingMessageId === message.id}
-          />
+          <div key={message.id} ref={(el) => setMessageRef(message.id, el)}>
+            <ChatMessage
+              message={message}
+              isStreaming={streamingMessageId === message.id}
+            />
+          </div>
         ))
       )}
     </div>
