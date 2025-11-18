@@ -8,7 +8,7 @@ interface MessageListProps {
   scrollContainerRef: React.RefObject<HTMLDivElement>;
 }
 
-const MessageList = ({ messages, streamingMessageId, scrollContainerRef: _ }: MessageListProps) => {
+const MessageList = ({ messages, streamingMessageId, scrollContainerRef }: MessageListProps) => {
   const latestUserMessageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -17,15 +17,22 @@ const MessageList = ({ messages, streamingMessageId, scrollContainerRef: _ }: Me
     const lastMessage = messages[messages.length - 1];
 
     // If the last message is from the user, scroll to position it at the top
-    if (lastMessage.role === 'user' && latestUserMessageRef.current) {
+    if (lastMessage.role === 'user' && latestUserMessageRef.current && scrollContainerRef.current) {
       setTimeout(() => {
-        if (latestUserMessageRef.current) {
-          // Use scrollIntoView to position the message at the very top
-          latestUserMessageRef.current.scrollIntoView({ block: 'start' });
+        if (latestUserMessageRef.current && scrollContainerRef.current) {
+          // Calculate the position of the message relative to the scroll container
+          const messageElement = latestUserMessageRef.current;
+          const containerElement = scrollContainerRef.current;
+
+          // Get the offset of the message relative to the container
+          const messageOffsetTop = messageElement.offsetTop;
+
+          // Scroll the container so the message appears at the top
+          containerElement.scrollTop = messageOffsetTop;
         }
       }, 0);
     }
-  }, [messages]);
+  }, [messages, scrollContainerRef]);
 
   // Find the last user message to attach the ref
   const lastUserMessageIndex = messages.length > 0 && messages[messages.length - 1].role === 'user'
