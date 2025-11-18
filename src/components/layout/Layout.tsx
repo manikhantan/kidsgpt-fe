@@ -1,4 +1,5 @@
 import { useState, ReactNode } from 'react';
+import { clsx } from 'clsx';
 import Header from './Header';
 import Sidebar from './Sidebar';
 
@@ -12,7 +13,12 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="h-screen flex bg-surface">
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
-      <div className="flex-1 flex flex-col min-w-0">
+      <div
+        className={clsx(
+          'flex-1 flex flex-col min-w-0 transition-all duration-200',
+          sidebarOpen ? 'lg:ml-[260px]' : 'ml-0'
+        )}
+      >
         <Header
           showMenuButton={true}
           sidebarOpen={sidebarOpen}
