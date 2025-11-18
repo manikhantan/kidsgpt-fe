@@ -3,7 +3,6 @@ import {
   LayoutDashboard,
   Users,
   Shield,
-  History,
   X,
   MessageCircle,
   Plus,

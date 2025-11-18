@@ -2,6 +2,7 @@ import { Message } from '@/types';
 import { formatMessageTime } from '@/utils/formatters';
 import { Bot, User, AlertTriangle, Copy, Check } from 'lucide-react';
 import { useState } from 'react';
+import VideoSuggestion from './VideoSuggestion';
 
 interface ChatMessageProps {
   message: Message;
@@ -96,6 +97,10 @@ const ChatMessage = ({ message, compact = false }: ChatMessageProps) => {
           <div className="message-text">
             <p className="whitespace-pre-wrap">{message.content}</p>
           </div>
+
+          {!isUser && !isBlocked && message.videoSuggestion && (
+            <VideoSuggestion video={message.videoSuggestion} />
+          )}
 
           {!isUser && !isBlocked && (
             <div className="mt-3 opacity-0 group-hover:opacity-100 transition-opacity">

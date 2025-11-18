@@ -1,6 +1,14 @@
 export type MessageRole = 'user' | 'assistant' | 'system';
 export type MessageStatus = 'sent' | 'pending' | 'blocked' | 'error';
 
+export interface YouTubeVideoSuggestion {
+  video_id: string;
+  title: string;
+  url: string;
+  thumbnail_url: string;
+  channel_title: string;
+}
+
 export interface Message {
   id: string;
   content: string;
@@ -10,6 +18,7 @@ export interface Message {
   blocked?: boolean;
   blockedReason?: string;
   allowedTopics?: string[];
+  videoSuggestion?: YouTubeVideoSuggestion;
 }
 
 export interface ChatSession {
@@ -62,6 +71,7 @@ export interface SendMessageResponse {
   block_reason: string | null;
   session_id: string;
   session_title: string;
+  video_suggestion?: YouTubeVideoSuggestion;
 }
 
 // Parent chat response format (same as kid chat)
@@ -70,6 +80,7 @@ export interface ParentChatResponse {
   assistant_message: BackendMessageResponse;
   session_id: string;
   session_title: string;
+  video_suggestion?: YouTubeVideoSuggestion;
 }
 
 export interface ChatHistoryResponse {
