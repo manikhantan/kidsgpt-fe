@@ -1,5 +1,5 @@
 import { useCallback, useRef } from 'react';
-import { useAppDispatch } from '@/store/hooks';
+import { useAppDispatch, useAppSelector } from '@/store/hooks';
 import {
   addMessage,
   updateMessage,
@@ -19,6 +19,7 @@ import type { StreamingChatRequest } from '@/types/streaming';
  */
 export function useStreamingChat(userRole: 'kid' | 'parent' = 'kid') {
   const dispatch = useAppDispatch();
+  const currentSessionId = useAppSelector((state) => state.chat.currentSessionId);
   const cleanupRef = useRef<(() => void) | null>(null);
   const streamingMessageIdRef = useRef<string | null>(null);
   const messageCreatedRef = useRef<boolean>(false);
@@ -29,7 +30,6 @@ export function useStreamingChat(userRole: 'kid' | 'parent' = 'kid') {
   const sendStreamingMessage = useCallback(
     async (
       content: string,
-      currentSessionId: string | null,
       callbacks?: {
         onBlocked?: () => void;
         onError?: (error: string) => void;
@@ -77,8 +77,9 @@ export function useStreamingChat(userRole: 'kid' | 'parent' = 'kid') {
               })
             );
 
-            // Update session if this was first message
-            if (!currentSessionId) {
+            // Always update session ID from backend response
+            // Backend is the source of truth for session management
+            if (data.session_id) {
               dispatch(setCurrentSessionId(data.session_id));
             }
           },
@@ -212,7 +213,7 @@ export function useStreamingChat(userRole: 'kid' | 'parent' = 'kid') {
         }
       }
     },
-    [dispatch, userRole]
+    [dispatch, userRole, currentSessionId]
   );
 
   /**

@@ -13,8 +13,6 @@ const ChatInterface = () => {
     messages,
     isStreaming,
     streamingMessageId,
-    currentSessionId,
-    currentSessionTitle,
   } = useAppSelector((state) => state.chat);
   const dispatch = useAppDispatch();
   const { sendStreamingMessage } = useStreamingChat();
@@ -33,7 +31,15 @@ const ChatInterface = () => {
           dispatch(
             setCurrentSession({
               id: fullSession.id,
-              title: fullSession.title || currentSessionTitle,
+              title: fullSession.title || 
+              
+              
+              
+              
+              
+              
+              
+              ,
               messages: fullSession.messages,
             })
           );
@@ -51,7 +57,7 @@ const ChatInterface = () => {
     setBlockedInfo({ show: false, allowedTopics: [] });
 
     // Use streaming chat
-    await sendStreamingMessage(content, currentSessionId, {
+    await sendStreamingMessage(content, {
       onBlocked: () => {
         setBlockedInfo({
           show: true,
