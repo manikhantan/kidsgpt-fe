@@ -9,37 +9,32 @@ interface MessageListProps {
 }
 
 const MessageList = ({ messages, streamingMessageId, scrollContainerRef }: MessageListProps) => {
-  const messageRefs = useRef<Map<string, HTMLDivElement>>(new Map());
+  const latestUserMessageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (messages.length === 0 || !scrollContainerRef.current) return;
+    if (messages.length === 0) return;
 
     const lastMessage = messages[messages.length - 1];
 
     // If the last message is from the user, scroll to position it at the top
-    if (lastMessage.role === 'user') {
-      // Use requestAnimationFrame to ensure DOM has updated
-      requestAnimationFrame(() => {
-        const messageElement = messageRefs.current.get(lastMessage.id);
-        if (messageElement && scrollContainerRef.current) {
-          // Scroll to the absolute position of the message element
-          // This positions the user message at the very top of the scroll container
-          scrollContainerRef.current.scrollTo({
-            top: messageElement.offsetTop,
-            behavior: 'smooth'
-          });
+    if (lastMessage.role === 'user' && latestUserMessageRef.current && scrollContainerRef.current) {
+      // Use setTimeout to ensure the DOM has fully updated
+      setTimeout(() => {
+        if (latestUserMessageRef.current && scrollContainerRef.current) {
+          // Get the position of the message relative to the container
+          const messageTop = latestUserMessageRef.current.offsetTop;
+
+          // Scroll the container to position the message at the top
+          scrollContainerRef.current.scrollTop = messageTop;
         }
-      });
+      }, 10);
     }
   }, [messages, scrollContainerRef]);
 
-  const setMessageRef = (id: string, element: HTMLDivElement | null) => {
-    if (element) {
-      messageRefs.current.set(id, element);
-    } else {
-      messageRefs.current.delete(id);
-    }
-  };
+  // Find the last user message to attach the ref
+  const lastUserMessageIndex = messages.length > 0 && messages[messages.length - 1].role === 'user'
+    ? messages.length - 1
+    : -1;
 
   return (
     <div className="w-full">
@@ -57,8 +52,11 @@ const MessageList = ({ messages, streamingMessageId, scrollContainerRef }: Messa
           </p>
         </div>
       ) : (
-        messages.map((message) => (
-          <div key={message.id} ref={(el) => setMessageRef(message.id, el)}>
+        messages.map((message, index) => (
+          <div
+            key={message.id}
+            ref={index === lastUserMessageIndex ? latestUserMessageRef : null}
+          >
             <ChatMessage
               message={message}
               isStreaming={streamingMessageId === message.id}
