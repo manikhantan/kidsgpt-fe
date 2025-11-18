@@ -8,7 +8,7 @@ interface MessageListProps {
   scrollContainerRef: React.RefObject<HTMLDivElement>;
 }
 
-const MessageList = ({ messages, streamingMessageId, scrollContainerRef }: MessageListProps) => {
+const MessageList = ({ messages, streamingMessageId, scrollContainerRef: _ }: MessageListProps) => {
   const latestUserMessageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -17,19 +17,15 @@ const MessageList = ({ messages, streamingMessageId, scrollContainerRef }: Messa
     const lastMessage = messages[messages.length - 1];
 
     // If the last message is from the user, scroll to position it at the top
-    if (lastMessage.role === 'user' && latestUserMessageRef.current && scrollContainerRef.current) {
-      // Use setTimeout to ensure the DOM has fully updated
+    if (lastMessage.role === 'user' && latestUserMessageRef.current) {
       setTimeout(() => {
-        if (latestUserMessageRef.current && scrollContainerRef.current) {
-          // Get the position of the message relative to the container
-          const messageTop = latestUserMessageRef.current.offsetTop;
-
-          // Scroll the container to position the message at the top
-          scrollContainerRef.current.scrollTop = messageTop;
+        if (latestUserMessageRef.current) {
+          // Use scrollIntoView to position the message at the very top
+          latestUserMessageRef.current.scrollIntoView({ block: 'start' });
         }
-      }, 10);
+      }, 0);
     }
-  }, [messages, scrollContainerRef]);
+  }, [messages]);
 
   // Find the last user message to attach the ref
   const lastUserMessageIndex = messages.length > 0 && messages[messages.length - 1].role === 'user'
