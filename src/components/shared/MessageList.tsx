@@ -18,11 +18,21 @@ const MessageList = ({ messages, streamingMessageId, scrollContainerRef }: Messa
 
     // If the last message is from the user, scroll to position it at the top
     if (lastMessage.role === 'user') {
-      const messageElement = messageRefs.current.get(lastMessage.id);
-      if (messageElement) {
-        // Scroll the message into view at the top of the container
-        messageElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
+      // Use requestAnimationFrame to ensure DOM has updated
+      requestAnimationFrame(() => {
+        const messageElement = messageRefs.current.get(lastMessage.id);
+        if (messageElement && scrollContainerRef.current) {
+          // Calculate the scroll position to place the message at the top
+          const containerTop = scrollContainerRef.current.getBoundingClientRect().top;
+          const messageTop = messageElement.getBoundingClientRect().top;
+          const scrollOffset = messageTop - containerTop;
+
+          scrollContainerRef.current.scrollBy({
+            top: scrollOffset,
+            behavior: 'smooth'
+          });
+        }
+      });
     }
   }, [messages, scrollContainerRef]);
 
