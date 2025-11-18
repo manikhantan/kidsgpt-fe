@@ -13,6 +13,8 @@ const ChatInterface = () => {
     messages,
     isStreaming,
     streamingMessageId,
+    currentSessionId,
+    currentSessionTitle,
   } = useAppSelector((state) => state.chat);
   const dispatch = useAppDispatch();
   const { sendStreamingMessage } = useStreamingChat();
@@ -31,15 +33,7 @@ const ChatInterface = () => {
           dispatch(
             setCurrentSession({
               id: fullSession.id,
-              title: fullSession.title || 
-              
-              
-              
-              
-              
-              
-              
-              ,
+              title: fullSession.title || 'New Chat',
               messages: fullSession.messages,
             })
           );
