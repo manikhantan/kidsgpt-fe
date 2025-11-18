@@ -4,7 +4,6 @@ import authReducer from './slices/authSlice';
 import childrenReducer from './slices/childrenSlice';
 import contentRulesReducer from './slices/contentRulesSlice';
 import chatReducer from './slices/chatSlice';
-import chatHistoryReducer from './slices/chatHistorySlice';
 
 export const store = configureStore({
   reducer: {
@@ -13,7 +12,6 @@ export const store = configureStore({
     children: childrenReducer,
     contentRules: contentRulesReducer,
     chat: chatReducer,
-    chatHistory: chatHistoryReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

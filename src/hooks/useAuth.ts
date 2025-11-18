@@ -5,7 +5,6 @@ import { setCredentials, logout as logoutAction } from '@/store/slices/authSlice
 import { clearChildren } from '@/store/slices/childrenSlice';
 import { clearContentRules } from '@/store/slices/contentRulesSlice';
 import { clearChat } from '@/store/slices/chatSlice';
-import { clearAllChatHistory } from '@/store/slices/chatHistorySlice';
 import { ROUTES } from '@/utils/constants';
 import { User } from '@/types';
 
@@ -34,7 +33,6 @@ export const useAuth = () => {
     dispatch(clearChildren());
     dispatch(clearContentRules());
     dispatch(clearChat());
-    dispatch(clearAllChatHistory());
     navigate(ROUTES.PARENT_LOGIN);
   }, [dispatch, navigate]);
 

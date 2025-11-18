@@ -1,4 +1,4 @@
-import { Users, MessageSquare, ShieldAlert, Activity, ChevronRight } from 'lucide-react';
+import { Users, MessageSquare, ShieldAlert, Activity, ChevronRight, Lightbulb } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Card from '@/components/shared/Card';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
@@ -56,10 +56,10 @@ const Dashboard = () => {
       route: ROUTES.PARENT_CONTENT_CONTROL,
     },
     {
-      label: 'Chat History',
-      description: 'Review past conversations',
-      icon: MessageSquare,
-      route: ROUTES.PARENT_CHAT_HISTORY,
+      label: 'Learning Insights',
+      description: 'View learning patterns and interests',
+      icon: Lightbulb,
+      route: ROUTES.PARENT_INSIGHTS,
     },
   ];
 
@@ -168,10 +168,10 @@ const Dashboard = () => {
                         </div>
                       </div>
                       <button
-                        onClick={() => navigate(`${ROUTES.PARENT_CHAT_HISTORY}?childId=${child.id}`)}
+                        onClick={() => navigate(`${ROUTES.PARENT_INSIGHTS}?childId=${child.id}`)}
                         className="text-xs font-medium text-accent hover:text-accent-hover transition-colors"
                       >
-                        View activity
+                        View insights
                       </button>
                     </div>
                   ))}
