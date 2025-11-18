@@ -6,9 +6,10 @@ import {
   appendToMessage,
   startStreaming,
   stopStreaming,
-  setCurrentSession,
+  setCurrentSessionId,
   setCurrentSessionTitle,
 } from '@/store/slices/chatSlice';
+import { apiSlice } from '@/store/api/apiSlice';
 import { createStreamingChat } from '@/services/streamingChat';
 import { Message } from '@/types';
 import type { StreamingChatRequest } from '@/types/streaming';
@@ -78,13 +79,7 @@ export function useStreamingChat(userRole: 'kid' | 'parent' = 'kid') {
 
             // Update session if this was first message
             if (!currentSessionId) {
-              dispatch(
-                setCurrentSession({
-                  id: data.session_id,
-                  title: null,
-                  messages: [],
-                })
-              );
+              dispatch(setCurrentSessionId(data.session_id));
             }
           },
 
@@ -131,6 +126,13 @@ export function useStreamingChat(userRole: 'kid' | 'parent' = 'kid') {
             // Update session title if provided
             if (data.session_title) {
               dispatch(setCurrentSessionTitle(data.session_title));
+
+              // Invalidate session cache to refresh the session list with new title
+              dispatch(
+                apiSlice.util.invalidateTags(
+                  userRole === 'parent' ? ['ParentChatSessions'] : ['ChatSessions']
+                )
+              );
             }
 
             // Stop streaming
@@ -148,6 +150,13 @@ export function useStreamingChat(userRole: 'kid' | 'parent' = 'kid') {
             // Update session info
             if (data.session_title) {
               dispatch(setCurrentSessionTitle(data.session_title));
+
+              // Invalidate session cache to refresh the session list with new title
+              dispatch(
+                apiSlice.util.invalidateTags(
+                  userRole === 'parent' ? ['ParentChatSessions'] : ['ChatSessions']
+                )
+              );
             }
 
             // Call callback if provided
