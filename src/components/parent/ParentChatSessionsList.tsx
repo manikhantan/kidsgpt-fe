@@ -70,27 +70,26 @@ const ParentChatSessionsList = ({ onSessionClick, maxItems = 20 }: ParentChatSes
   return (
     <div className="flex flex-col h-full">
       {/* Action Buttons */}
-      <div className="px-3 py-3 space-y-1.5">
+      <div className="sidebar-section space-y-1">
         <button
           onClick={handleGoHome}
-          className="w-full flex items-center gap-2 px-3 py-2 text-sm text-sidebar-text-muted hover:text-sidebar-text hover:bg-sidebar-hover rounded-lg transition-colors"
+          className="sidebar-item w-full"
         >
-          <Home className="h-4 w-4" />
-          Back to Dashboard
+          <Home className="sidebar-item-icon" />
+          <span>Back to Dashboard</span>
         </button>
+        <div className="sidebar-divider" />
         <button
           onClick={handleNewChat}
           disabled={isCurrentConversationEmpty}
           className={clsx(
-            'w-full flex items-center gap-2 px-3 py-2 text-sm rounded-lg transition-colors',
-            isCurrentConversationEmpty
-              ? 'text-sidebar-text-muted opacity-50 cursor-not-allowed'
-              : 'text-sidebar-text hover:bg-sidebar-hover'
+            'sidebar-item w-full',
+            isCurrentConversationEmpty && 'opacity-50 cursor-not-allowed'
           )}
           title={isCurrentConversationEmpty ? 'Send a message first to start a new chat' : undefined}
         >
-          <Plus className="h-4 w-4" />
-          New Chat
+          <Plus className="sidebar-item-icon" />
+          <span>New Chat</span>
         </button>
       </div>
 
@@ -118,21 +117,16 @@ const ParentChatSessionsList = ({ onSessionClick, maxItems = 20 }: ParentChatSes
               <button
                 key={session.id}
                 onClick={() => handleSessionClick(session)}
-                className={clsx(
-                  'w-full text-left px-3 py-2.5 rounded-lg transition-colors duration-150 group relative',
+                className={
                   currentSessionId === session.id
-                    ? 'bg-sidebar-hover'
-                    : 'hover:bg-sidebar-hover'
-                )}
+                    ? 'sidebar-chat-item-active w-full text-left'
+                    : 'sidebar-chat-item w-full text-left'
+                }
               >
-                <div className="flex items-center gap-3">
-                  <MessageSquare className="h-4 w-4 text-sidebar-text-muted flex-shrink-0" />
-                  <div className="flex-1 min-w-0">
-                    <div className="text-sm text-sidebar-text truncate">
-                      {truncateText(session.title, 28)}
-                    </div>
-                  </div>
-                </div>
+                <MessageSquare className="h-4 w-4 flex-shrink-0" />
+                <span className="sidebar-chat-title">
+                  {truncateText(session.title, 28)}
+                </span>
               </button>
             ))}
           </div>

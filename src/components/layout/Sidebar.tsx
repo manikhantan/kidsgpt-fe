@@ -101,13 +101,13 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
         )}
       >
         {/* Header */}
-        <div className="flex items-center justify-between p-3 h-14">
+        <div className="sidebar-header flex items-center justify-between">
           <button
             onClick={handleNewChat}
-            className="flex items-center gap-2 flex-1 p-2 rounded-lg hover:bg-sidebar-hover transition-colors"
+            className="sidebar-new-chat flex-1"
           >
-            <Plus className="h-4 w-4 text-sidebar-text" />
-            <span className="text-sm text-sidebar-text">New chat</span>
+            <Plus className="sidebar-item-icon" />
+            <span>New chat</span>
           </button>
           <button
             onClick={onClose}
@@ -124,23 +124,18 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
           ) : isParentOnChatPage ? (
             <ParentChatSessionsList onSessionClick={onClose} />
           ) : (
-            <nav className="space-y-1 py-2">
+            <nav className="sidebar-section space-y-1">
               {navItems.map((item) => (
                 <NavLink
                   key={item.to}
                   to={item.to}
                   onClick={onClose}
                   className={({ isActive }) =>
-                    clsx(
-                      'sidebar-item group',
-                      isActive && 'bg-sidebar-hover'
-                    )
+                    isActive ? 'sidebar-item-active' : 'sidebar-item'
                   }
                 >
-                  <item.icon className="h-4 w-4 text-sidebar-text-muted group-hover:text-sidebar-text" />
-                  <span className="text-sidebar-text group-hover:text-sidebar-text">
-                    {item.label}
-                  </span>
+                  <item.icon className="sidebar-item-icon" />
+                  <span>{item.label}</span>
                 </NavLink>
               ))}
             </nav>

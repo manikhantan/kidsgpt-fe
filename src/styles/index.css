@@ -42,29 +42,32 @@
 @layer components {
   /* Modern minimal buttons */
   .btn {
-    @apply inline-flex items-center justify-center font-medium transition-colors duration-150
-           focus:outline-none focus:ring-2 focus:ring-offset-1
-           disabled:cursor-not-allowed disabled:opacity-50;
+    @apply inline-flex items-center justify-center font-medium transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-offset-2
+           disabled:cursor-not-allowed disabled:opacity-50
+           shadow-sm hover:shadow;
   }
 
   .btn-primary {
-    @apply btn bg-accent text-white hover:bg-accent-hover rounded-lg px-4 py-2.5
-           focus:ring-accent/50;
+    @apply btn bg-accent text-white hover:bg-accent-hover rounded-xl px-5 py-2.5
+           focus:ring-accent/50 active:scale-[0.98];
   }
 
   .btn-secondary {
     @apply btn bg-surface-secondary text-text-primary hover:bg-surface-tertiary
-           rounded-lg px-4 py-2.5 border border-border focus:ring-border;
+           rounded-xl px-5 py-2.5 border border-border focus:ring-border
+           active:scale-[0.98];
   }
 
   .btn-ghost {
     @apply btn bg-transparent text-text-secondary hover:bg-surface-secondary
-           rounded-lg px-4 py-2.5 hover:text-text-primary;
+           rounded-xl px-4 py-2.5 hover:text-text-primary shadow-none
+           active:scale-[0.98];
   }
 
   .btn-danger {
-    @apply btn bg-error text-white hover:bg-error-dark rounded-lg px-4 py-2.5
-           focus:ring-error/50;
+    @apply btn bg-error text-white hover:bg-error-dark rounded-xl px-5 py-2.5
+           focus:ring-error/50 active:scale-[0.98];
   }
 
   /* Clean input styles */
@@ -91,7 +94,7 @@
 
   /* ChatGPT-style message containers */
   .message-container {
-    @apply w-full border-b border-border/50;
+    @apply w-full border-b border-border/30 transition-colors duration-200;
   }
 
   .message-container-user {
@@ -99,27 +102,41 @@
   }
 
   .message-container-assistant {
-    @apply message-container bg-surface-secondary;
+    @apply message-container bg-surface-secondary/50;
+  }
+
+  .message-container-system {
+    @apply message-container bg-info-light/20;
   }
 
   .message-content {
-    @apply max-w-chat mx-auto px-4 py-6 flex gap-4;
+    @apply max-w-3xl mx-auto px-6 py-8 flex gap-6;
   }
 
   .message-avatar {
-    @apply w-8 h-8 rounded-sm flex-shrink-0 flex items-center justify-center text-sm font-medium;
+    @apply w-8 h-8 rounded-md flex-shrink-0 flex items-center justify-center text-sm font-semibold
+           shadow-sm ring-1 ring-black/5;
   }
 
   .message-avatar-user {
-    @apply message-avatar bg-accent text-white;
+    @apply message-avatar bg-gradient-to-br from-accent to-accent-dark text-white;
   }
 
   .message-avatar-assistant {
-    @apply message-avatar bg-surface-dark text-white;
+    @apply message-avatar bg-gradient-to-br from-surface-dark to-gray-800 text-white;
+  }
+
+  .message-avatar-system {
+    @apply message-avatar bg-gradient-to-br from-info to-info-dark text-white;
   }
 
   .message-text {
-    @apply flex-1 text-text-primary leading-relaxed;
+    @apply flex-1 text-text-primary leading-relaxed text-[15px] break-words;
+  }
+
+  .message-actions {
+    @apply opacity-0 group-hover:opacity-100 transition-opacity duration-200
+           flex items-start gap-1;
   }
 
   /* Sidebar styles */
@@ -127,13 +144,48 @@
     @apply bg-sidebar text-sidebar-text h-full flex flex-col;
   }
 
+  .sidebar-header {
+    @apply px-3 py-4 border-b border-sidebar-border;
+  }
+
+  .sidebar-section {
+    @apply px-2 py-3;
+  }
+
   .sidebar-item {
-    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm
-           hover:bg-sidebar-hover transition-colors duration-150 cursor-pointer;
+    @apply flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+           hover:bg-sidebar-hover transition-all duration-200 cursor-pointer
+           relative;
   }
 
   .sidebar-item-active {
-    @apply sidebar-item bg-sidebar-hover;
+    @apply sidebar-item bg-sidebar-hover/80 text-sidebar-text;
+  }
+
+  .sidebar-item-icon {
+    @apply w-5 h-5 transition-transform duration-200 group-hover:scale-110;
+  }
+
+  .sidebar-divider {
+    @apply h-px bg-sidebar-border mx-3 my-2;
+  }
+
+  .sidebar-chat-item {
+    @apply sidebar-item text-sidebar-text-muted hover:text-sidebar-text
+           text-xs py-2 relative overflow-hidden;
+  }
+
+  .sidebar-chat-item-active {
+    @apply sidebar-chat-item bg-sidebar-hover text-sidebar-text;
+  }
+
+  .sidebar-chat-title {
+    @apply truncate flex-1;
+  }
+
+  .sidebar-new-chat {
+    @apply sidebar-item bg-transparent border border-sidebar-border
+           hover:bg-sidebar-hover hover:border-transparent;
   }
 
   /* Clean scrollbar */

@@ -12,8 +12,8 @@ const Header = ({ onMenuToggle, showMenuButton = false, sidebarOpen = true }: He
   const { user, logout } = useAuth();
 
   return (
-    <header className="h-14 bg-surface border-b border-border flex items-center justify-between px-4 sticky top-0 z-10">
-      <div className="flex items-center gap-2">
+    <header className="h-14 bg-surface border-b border-border/50 flex items-center justify-between px-4 sticky top-0 z-10 backdrop-blur-sm">
+      <div className="flex items-center gap-3">
         {showMenuButton && (
           <button
             onClick={onMenuToggle}
@@ -27,12 +27,12 @@ const Header = ({ onMenuToggle, showMenuButton = false, sidebarOpen = true }: He
             )}
           </button>
         )}
-        <h1 className="text-base font-semibold text-text-primary">
+        <h1 className="text-base font-semibold text-text-primary tracking-tight">
           {APP_NAME}
         </h1>
       </div>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3">
         {user && (
           <>
             <span className="text-sm text-text-secondary hidden sm:block">

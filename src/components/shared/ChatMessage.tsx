@@ -109,20 +109,21 @@ const ChatMessage = ({ message, compact = false, isStreaming = false }: ChatMess
           )}
 
           {!isUser && !isBlocked && (
-            <div className="mt-3 opacity-0 group-hover:opacity-100 transition-opacity">
+            <div className="mt-3 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
               <button
                 onClick={copyToClipboard}
-                className="inline-flex items-center gap-1.5 text-xs text-text-muted hover:text-text-primary transition-colors"
+                className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md text-xs text-text-secondary hover:text-text-primary hover:bg-surface-secondary transition-all duration-150"
+                title={copied ? 'Copied!' : 'Copy to clipboard'}
               >
                 {copied ? (
                   <>
                     <Check className="h-3.5 w-3.5" />
-                    Copied
+                    <span>Copied!</span>
                   </>
                 ) : (
                   <>
                     <Copy className="h-3.5 w-3.5" />
-                    Copy
+                    <span>Copy</span>
                   </>
                 )}
               </button>
