@@ -7,9 +7,10 @@ import VideoSuggestion from './VideoSuggestion';
 interface ChatMessageProps {
   message: Message;
   compact?: boolean;
+  isStreaming?: boolean;
 }
 
-const ChatMessage = ({ message, compact = false }: ChatMessageProps) => {
+const ChatMessage = ({ message, compact = false, isStreaming = false }: ChatMessageProps) => {
   const isUser = message.role === 'user';
   const isBlocked = message.blocked;
   const [copied, setCopied] = useState(false);
@@ -95,7 +96,12 @@ const ChatMessage = ({ message, compact = false }: ChatMessageProps) => {
           )}
 
           <div className="message-text">
-            <p className="whitespace-pre-wrap">{message.content}</p>
+            <p className="whitespace-pre-wrap">
+              {message.content}
+              {isStreaming && (
+                <span className="inline-block w-1.5 h-4 ml-1 bg-text-primary animate-pulse" />
+              )}
+            </p>
           </div>
 
           {!isUser && !isBlocked && message.videoSuggestion && (

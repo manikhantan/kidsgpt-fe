@@ -4,9 +4,10 @@ import { useAutoScroll } from '@/hooks/useAutoScroll';
 
 interface MessageListProps {
   messages: Message[];
+  streamingMessageId?: string | null;
 }
 
-const MessageList = ({ messages }: MessageListProps) => {
+const MessageList = ({ messages, streamingMessageId }: MessageListProps) => {
   const scrollRef = useAutoScroll<HTMLDivElement>([messages]);
 
   return (
@@ -29,7 +30,11 @@ const MessageList = ({ messages }: MessageListProps) => {
         </div>
       ) : (
         messages.map((message) => (
-          <ChatMessage key={message.id} message={message} />
+          <ChatMessage
+            key={message.id}
+            message={message}
+            isStreaming={streamingMessageId === message.id}
+          />
         ))
       )}
     </div>

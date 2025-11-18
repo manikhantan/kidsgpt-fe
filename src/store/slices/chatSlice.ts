@@ -7,6 +7,8 @@ interface ChatState {
   currentSessionTitle: string | null;
   loading: boolean;
   error: string | null;
+  isStreaming: boolean;
+  streamingMessageId: string | null;
 }
 
 const initialState: ChatState = {
@@ -15,6 +17,8 @@ const initialState: ChatState = {
   currentSessionTitle: null,
   loading: false,
   error: null,
+  isStreaming: false,
+  streamingMessageId: null,
 };
 
 const chatSlice = createSlice({
@@ -70,6 +74,28 @@ const chatSlice = createSlice({
       state.currentSessionTitle = null;
       state.error = null;
     },
+    setStreaming: (
+      state,
+      action: PayloadAction<{ isStreaming: boolean; messageId: string | null }>
+    ) => {
+      state.isStreaming = action.payload.isStreaming;
+      state.streamingMessageId = action.payload.messageId;
+    },
+    appendToMessage: (state, action: PayloadAction<{ id: string; content: string }>) => {
+      const { id, content } = action.payload;
+      const message = state.messages.find((msg) => msg.id === id);
+      if (message) {
+        message.content += content;
+      }
+    },
+    startStreaming: (state, action: PayloadAction<string>) => {
+      state.isStreaming = true;
+      state.streamingMessageId = action.payload;
+    },
+    stopStreaming: (state) => {
+      state.isStreaming = false;
+      state.streamingMessageId = null;
+    },
   },
 });
 
@@ -84,6 +110,10 @@ export const {
   setChatLoading,
   setChatError,
   clearChat,
+  setStreaming,
+  appendToMessage,
+  startStreaming,
+  stopStreaming,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;
