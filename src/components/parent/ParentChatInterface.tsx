@@ -47,6 +47,7 @@ const ParentChatInterface = () => {
         role: 'assistant',
         timestamp: response.assistant_message.created_at,
         status: 'sent',
+        videoSuggestion: response.video_suggestion,
       };
       console.log('Adding assistant message:', assistantMessage);
       dispatch(addMessage(assistantMessage));

@@ -221,6 +221,81 @@
   .prose-chat {
     @apply text-text-primary leading-relaxed;
   }
+
+  /* Video Suggestion Card */
+  .video-suggestion-card {
+    @apply rounded-xl overflow-hidden shadow-lg transition-all duration-300 hover:shadow-xl;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 1rem;
+  }
+
+  .video-header {
+    @apply flex items-center gap-2 mb-3;
+  }
+
+  .video-header h4 {
+    @apply text-sm font-semibold text-white;
+  }
+
+  .video-link {
+    @apply block no-underline transition-transform duration-200;
+  }
+
+  .video-link:hover {
+    transform: scale(1.02);
+  }
+
+  .video-thumbnail-wrapper {
+    @apply relative rounded-lg overflow-hidden aspect-video cursor-pointer;
+    background: rgba(0, 0, 0, 0.2);
+  }
+
+  .video-thumbnail {
+    @apply w-full h-full object-cover;
+  }
+
+  .video-thumbnail-placeholder {
+    @apply w-full h-full flex items-center justify-center bg-gray-700;
+  }
+
+  .play-button-overlay {
+    @apply absolute inset-0 flex items-center justify-center transition-all duration-200;
+  }
+
+  .play-button-circle {
+    @apply w-16 h-16 rounded-full bg-red-600 flex items-center justify-center shadow-lg;
+    transition: all 0.2s ease;
+  }
+
+  .play-button-overlay:hover .play-button-circle {
+    @apply bg-red-700 scale-110;
+  }
+
+  .video-info {
+    @apply mt-3 px-1;
+  }
+
+  .video-title {
+    @apply text-base font-semibold text-white leading-tight mb-1;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .video-channel {
+    @apply text-sm text-white/80;
+  }
+
+  .video-cta {
+    @apply mt-3;
+  }
+
+  .watch-button {
+    @apply w-full py-3 px-4 bg-white text-purple-600 font-semibold rounded-lg
+           flex items-center justify-center gap-2 transition-all duration-200
+           hover:bg-gray-100 hover:scale-105 active:scale-95 shadow-md;
+  }
 }
 
 /* Animation for new messages */
@@ -237,4 +312,20 @@
 
 .message-animate {
   animation: messageSlideIn 0.3s ease-out;
+}
+
+/* Animation for video suggestion */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out;
 }
