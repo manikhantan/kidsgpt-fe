@@ -11,7 +11,6 @@ const ChatInterface = () => {
     messages,
     isStreaming,
     streamingMessageId,
-    currentSessionId,
   } = useAppSelector((state) => state.chat);
   const { sendStreamingMessage } = useStreamingChat();
   const [blockedInfo, setBlockedInfo] = useState<{
@@ -23,7 +22,7 @@ const ChatInterface = () => {
     setBlockedInfo({ show: false, allowedTopics: [] });
 
     // Use streaming chat
-    await sendStreamingMessage(content, currentSessionId, {
+    await sendStreamingMessage(content, {
       onBlocked: () => {
         setBlockedInfo({
           show: true,

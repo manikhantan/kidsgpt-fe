@@ -8,14 +8,12 @@ const ParentChatInterface = () => {
     messages,
     isStreaming,
     streamingMessageId,
-    currentSessionId,
-    currentSessionTitle,
   } = useAppSelector((state) => state.chat);
   const { sendStreamingMessage } = useStreamingChat('parent');
 
   const handleSendMessage = async (content: string) => {
     // Use streaming chat
-    await sendStreamingMessage(content, currentSessionId, {
+    await sendStreamingMessage(content, {
       onError: (error) => {
         console.error('Streaming error:', error);
       },
