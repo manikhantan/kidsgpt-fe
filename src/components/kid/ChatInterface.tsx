@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import MessageList from '@/components/shared/MessageList';
 import ChatInput from '@/components/shared/ChatInput';
-import LoadingDots from '@/components/shared/LoadingDots';
 import BlockedNotification from './BlockedNotification';
 import { useAppSelector } from '@/store/hooks';
 import { useStreamingChat } from '@/hooks/useStreamingChat';
@@ -62,7 +61,6 @@ const ChatInterface = () => {
             {blockedInfo.show && (
               <BlockedNotification allowedTopics={blockedInfo.allowedTopics} />
             )}
-            {isStreaming && <LoadingDots />}
           </div>
         )}
 

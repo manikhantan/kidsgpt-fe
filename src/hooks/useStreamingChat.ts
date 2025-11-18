@@ -16,7 +16,7 @@ import type { StreamingChatRequest } from '@/types/streaming';
 /**
  * Custom hook for managing streaming chat connections
  */
-export function useStreamingChat() {
+export function useStreamingChat(userRole: 'kid' | 'parent' = 'kid') {
   const dispatch = useAppDispatch();
   const cleanupRef = useRef<(() => void) | null>(null);
   const streamingMessageIdRef = useRef<string | null>(null);
@@ -180,7 +180,7 @@ export function useStreamingChat() {
             streamingMessageIdRef.current = null;
             messageCreatedRef.current = false;
           },
-        });
+        }, userRole);
 
         // Store cleanup function
         cleanupRef.current = cleanup;
@@ -203,7 +203,7 @@ export function useStreamingChat() {
         }
       }
     },
-    [dispatch]
+    [dispatch, userRole]
   );
 
   /**

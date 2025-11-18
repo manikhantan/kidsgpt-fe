@@ -31,7 +31,8 @@ function parseSSEMessage(rawData: string): { event: string; data: string } | nul
  */
 export async function createStreamingChat(
   request: StreamingChatRequest,
-  callbacks: StreamingCallbacks
+  callbacks: StreamingCallbacks,
+  userRole: 'kid' | 'parent' = 'kid'
 ): Promise<() => void> {
   const token = getToken();
   if (!token) {
@@ -42,8 +43,13 @@ export async function createStreamingChat(
   const controller = new AbortController();
   const signal = controller.signal;
 
+  // Determine the endpoint based on user role
+  const endpoint = userRole === 'parent'
+    ? `${API_BASE_URL}/api/parent/chat/stream`
+    : `${API_BASE_URL}/api/kid/chat/stream`;
+
   try {
-    const response = await fetch(`${API_BASE_URL}/api/kid/chat/stream`, {
+    const response = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
