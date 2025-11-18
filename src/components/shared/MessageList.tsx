@@ -20,15 +20,19 @@ const MessageList = ({ messages, streamingMessageId, scrollContainerRef }: Messa
     if (lastMessage.role === 'user' && latestUserMessageRef.current && scrollContainerRef.current) {
       setTimeout(() => {
         if (latestUserMessageRef.current && scrollContainerRef.current) {
-          // Calculate the position of the message relative to the scroll container
           const messageElement = latestUserMessageRef.current;
           const containerElement = scrollContainerRef.current;
 
-          // Get the offset of the message relative to the container
-          const messageOffsetTop = messageElement.offsetTop;
+          // Get the bounding rectangles to calculate precise positions
+          const messageRect = messageElement.getBoundingClientRect();
+          const containerRect = containerElement.getBoundingClientRect();
 
-          // Scroll the container so the message appears at the top
-          containerElement.scrollTop = messageOffsetTop;
+          // Calculate how much to scroll to position the message at the top
+          // Current scroll position + difference between message top and container top
+          const scrollOffset = containerElement.scrollTop + (messageRect.top - containerRect.top);
+
+          // Scroll the container so the message appears at the very top
+          containerElement.scrollTop = scrollOffset;
         }
       }, 0);
     }
