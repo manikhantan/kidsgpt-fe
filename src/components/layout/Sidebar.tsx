@@ -95,7 +95,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
       {/* Sidebar */}
       <aside
         className={clsx(
-          'fixed lg:static inset-y-0 left-0 z-30 w-[260px] bg-sidebar flex flex-col',
+          'fixed inset-y-0 left-0 z-30 w-[260px] bg-sidebar flex flex-col',
           'transform transition-transform duration-200 ease-out',
           isOpen ? 'translate-x-0' : '-translate-x-full'
         )}
