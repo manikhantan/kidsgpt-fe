@@ -7,7 +7,8 @@ import {
   X,
   MessageCircle,
   Plus,
-  ChevronDown
+  ChevronDown,
+  Lightbulb
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { ROUTES } from '@/utils/constants';
@@ -37,9 +38,9 @@ const parentNavItems = [
     label: 'Content Control',
   },
   {
-    to: ROUTES.PARENT_CHAT_HISTORY,
-    icon: History,
-    label: 'Chat History',
+    to: ROUTES.PARENT_INSIGHTS,
+    icon: Lightbulb,
+    label: 'Insights',
   },
   {
     to: ROUTES.PARENT_CHAT,

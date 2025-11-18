@@ -14,6 +14,8 @@ import {
   ChatSessionSummary,
   PaginatedChatSessions,
   ChatSession,
+  ChildInsightsDashboard,
+  RefreshInsightsResponse,
 } from '@/types';
 
 const baseQuery = fetchBaseQuery({
@@ -30,7 +32,7 @@ const baseQuery = fetchBaseQuery({
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery,
-  tagTypes: ['Children', 'ContentRules', 'ChatHistory', 'Messages', 'Analytics', 'ChatSessions', 'ParentChatSessions'],
+  tagTypes: ['Children', 'ContentRules', 'ChatHistory', 'Messages', 'Analytics', 'ChatSessions', 'ParentChatSessions', 'Insights'],
   endpoints: (builder) => ({
     // Auth endpoints
     parentRegister: builder.mutation<
@@ -104,6 +106,8 @@ export const apiSlice = createApi({
       invalidatesTags: ['ContentRules'],
     }),
 
+    // Deprecated: Old endpoints kept for backward compatibility during transition
+    // Will be removed in future version
     getChatHistory: builder.query<ChatHistoryResponse, string>({
       query: (childId) => `/api/parent/chat-history/${childId}`,
       providesTags: (_result, _error, childId) => [{ type: 'ChatHistory', id: childId }],
@@ -112,6 +116,20 @@ export const apiSlice = createApi({
     getAnalytics: builder.query<AnalyticsData, string>({
       query: (childId) => `/api/parent/analytics/${childId}`,
       providesTags: (_result, _error, childId) => [{ type: 'Analytics', id: childId }],
+    }),
+
+    // New insights endpoints
+    getChildInsights: builder.query<ChildInsightsDashboard, string>({
+      query: (childId) => `/api/parent/insights/${childId}`,
+      providesTags: (_result, _error, childId) => [{ type: 'Insights', id: childId }],
+    }),
+
+    refreshChildInsights: builder.mutation<RefreshInsightsResponse, string>({
+      query: (childId) => ({
+        url: `/api/parent/insights/${childId}/refresh`,
+        method: 'POST',
+      }),
+      invalidatesTags: (_result, _error, childId) => [{ type: 'Insights', id: childId }],
     }),
 
     sendParentMessage: builder.mutation<ParentChatResponse, { message: string; sessionId?: string }>({
@@ -198,6 +216,8 @@ export const {
   useUpdateContentRulesMutation,
   useGetChatHistoryQuery,
   useGetAnalyticsQuery,
+  useGetChildInsightsQuery,
+  useRefreshChildInsightsMutation,
   useSendParentMessageMutation,
   useSendMessageMutation,
   useGetKidChatHistoryQuery,

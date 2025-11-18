@@ -11,7 +11,8 @@ export const ROUTES = {
   PARENT_REGISTER: '/register/parent',
   PARENT_DASHBOARD: '/parent/dashboard',
   PARENT_CONTENT_CONTROL: '/parent/content-control',
-  PARENT_CHAT_HISTORY: '/parent/chat-history',
+  PARENT_CHAT_HISTORY: '/parent/chat-history', // Deprecated: redirects to insights
+  PARENT_INSIGHTS: '/parent/insights',
   PARENT_CHILDREN: '/parent/children',
   PARENT_CHAT: '/parent/chat',
   PARENT_ALL_CHATS: '/parent/all-chats',
