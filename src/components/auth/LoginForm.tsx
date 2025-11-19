@@ -8,20 +8,21 @@ import {
   ParentLoginFormData,
   KidLoginFormData,
 } from '@/utils/validators';
+import styles from './LoginForm.module.css';
 
 type LoginFormProps =
   | {
-      type: 'parent';
-      onSubmit: (data: ParentLoginFormData) => void;
-      isLoading?: boolean;
-      error?: string | null;
-    }
+    type: 'parent';
+    onSubmit: (data: ParentLoginFormData) => void;
+    isLoading?: boolean;
+    error?: string | null;
+  }
   | {
-      type: 'child';
-      onSubmit: (data: KidLoginFormData) => void;
-      isLoading?: boolean;
-      error?: string | null;
-    };
+    type: 'child';
+    onSubmit: (data: KidLoginFormData) => void;
+    isLoading?: boolean;
+    error?: string | null;
+  };
 
 const LoginForm = ({ type, onSubmit, isLoading = false, error }: LoginFormProps) => {
   const schema = type === 'parent' ? parentLoginSchema : kidLoginSchema;
@@ -43,9 +44,9 @@ const LoginForm = ({ type, onSubmit, isLoading = false, error }: LoginFormProps)
   };
 
   return (
-    <form onSubmit={handleSubmit(handleFormSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(handleFormSubmit)} className={styles.form}>
       {error && (
-        <div className="bg-error-light border border-error/20 text-error-dark px-4 py-3 rounded-lg text-sm">
+        <div className={styles.error}>
           {error}
         </div>
       )}
@@ -66,7 +67,7 @@ const LoginForm = ({ type, onSubmit, isLoading = false, error }: LoginFormProps)
         error={errors.password?.message}
       />
 
-      <Button type="submit" className="w-full" isLoading={isLoading} disabled={isLoading}>
+      <Button type="submit" className={styles.submitButton} isLoading={isLoading} disabled={isLoading}>
         {type === 'parent' ? 'Sign in' : 'Sign in'}
       </Button>
     </form>

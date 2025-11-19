@@ -2,6 +2,7 @@ import { useState, ReactNode } from 'react';
 import { clsx } from 'clsx';
 import Header from './Header';
 import Sidebar from './Sidebar';
+import styles from './Layout.module.css';
 
 interface LayoutProps {
   children: ReactNode;
@@ -11,12 +12,19 @@ const Layout = ({ children }: LayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   return (
-    <div className="h-screen flex bg-surface">
+    <div className={styles.container}>
       <Sidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+
+      {/* Mobile Overlay */}
+      <div
+        className={clsx(styles.overlay, sidebarOpen && styles.overlayVisible)}
+        onClick={() => setSidebarOpen(false)}
+      />
+
       <div
         className={clsx(
-          'flex-1 flex flex-col min-w-0 transition-all duration-200',
-          sidebarOpen ? 'lg:ml-[260px]' : 'ml-0'
+          styles.mainWrapper,
+          sidebarOpen && styles.mainWrapperShifted
         )}
       >
         <Header
@@ -24,7 +32,7 @@ const Layout = ({ children }: LayoutProps) => {
           sidebarOpen={sidebarOpen}
           onMenuToggle={() => setSidebarOpen(!sidebarOpen)}
         />
-        <main className="flex-1 overflow-auto pl-8 pr-8 pt-6">
+        <main className={styles.mainContent}>
           {children}
         </main>
       </div>

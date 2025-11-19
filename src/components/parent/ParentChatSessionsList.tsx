@@ -8,6 +8,7 @@ import { truncateText } from '@/utils/formatters';
 import { ChatSessionSummary } from '@/types';
 import { useLoadParentChatSession } from '@/hooks/useLoadParentChatSession';
 import { useCreateNewParentChat } from '@/hooks/useCreateNewParentChat';
+import styles from './ParentChatSessionsList.module.css';
 
 interface ParentChatSessionsListProps {
   onSessionClick?: () => void;
@@ -47,11 +48,11 @@ const ParentChatSessionsList = ({ onSessionClick, maxItems = 20 }: ParentChatSes
 
   if (isLoading) {
     return (
-      <div className="py-8 flex justify-center">
-        <div className="flex gap-1">
-          <div className="w-2 h-2 bg-sidebar-text-muted rounded-full animate-pulse" />
-          <div className="w-2 h-2 bg-sidebar-text-muted rounded-full animate-pulse" style={{ animationDelay: '150ms' }} />
-          <div className="w-2 h-2 bg-sidebar-text-muted rounded-full animate-pulse" style={{ animationDelay: '300ms' }} />
+      <div className={styles.loading}>
+        <div className={styles.loadingDots}>
+          <div className={styles.dot} />
+          <div className={styles.dot} style={{ animationDelay: '150ms' }} />
+          <div className={styles.dot} style={{ animationDelay: '300ms' }} />
         </div>
       </div>
     );
@@ -59,8 +60,8 @@ const ParentChatSessionsList = ({ onSessionClick, maxItems = 20 }: ParentChatSes
 
   if (error) {
     return (
-      <div className="py-4 px-3">
-        <div className="text-xs text-error bg-error/10 rounded-lg p-3">
+      <div className="p-4">
+        <div className="text-xs text-red-400 bg-red-400/10 rounded-lg p-3">
           Failed to load chat sessions
         </div>
       </div>
@@ -68,63 +69,59 @@ const ParentChatSessionsList = ({ onSessionClick, maxItems = 20 }: ParentChatSes
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className={styles.container}>
       {/* Action Buttons */}
-      <div className="sidebar-section space-y-1">
+      <div className={styles.actionSection}>
         <button
           onClick={handleGoHome}
-          className="sidebar-item w-full"
+          className={styles.actionButton}
         >
-          <Home className="sidebar-item-icon" />
+          <Home className={styles.sessionIcon} />
           <span>Back to Dashboard</span>
         </button>
-        <div className="sidebar-divider" />
+        <div className={styles.divider} />
         <button
           onClick={handleNewChat}
           disabled={isCurrentConversationEmpty}
-          className={clsx(
-            'sidebar-item w-full',
-            isCurrentConversationEmpty && 'opacity-50 cursor-not-allowed'
-          )}
+          className={styles.actionButton}
           title={isCurrentConversationEmpty ? 'Send a message first to start a new chat' : undefined}
         >
-          <Plus className="sidebar-item-icon" />
+          <Plus className={styles.sessionIcon} />
           <span>New Chat</span>
         </button>
       </div>
 
       {/* Sessions List */}
-      <div className="flex-1 overflow-y-auto py-2 scrollbar-thin">
+      <div className={styles.listSection}>
         {sessions && sessions.length > 0 && (
-          <div className="mb-2 px-3">
-            <span className="text-xs font-medium text-sidebar-text-muted uppercase tracking-wider">
+          <div className={styles.sectionHeader}>
+            <span className={styles.sectionTitle}>
               Recent
             </span>
           </div>
         )}
 
         {(!sessions || sessions.length === 0) ? (
-          <div className="px-3 py-8 text-center">
-            <MessageSquare className="h-8 w-8 text-sidebar-text-muted mx-auto mb-3 opacity-50" />
-            <p className="text-sm text-sidebar-text-muted">No chat history</p>
-            <p className="text-xs text-sidebar-text-muted mt-1 opacity-75">
+          <div className={styles.emptyState}>
+            <MessageSquare className={styles.emptyIcon} />
+            <p className={styles.emptyText}>No chat history</p>
+            <p className={styles.emptySubtext}>
               Start a conversation
             </p>
           </div>
         ) : (
-          <div className="space-y-0.5">
+          <div className={styles.sessionList}>
             {sessions.map((session) => (
               <button
                 key={session.id}
                 onClick={() => handleSessionClick(session)}
-                className={
-                  currentSessionId === session.id
-                    ? 'sidebar-chat-item-active w-full text-left'
-                    : 'sidebar-chat-item w-full text-left'
-                }
+                className={clsx(
+                  styles.sessionItem,
+                  currentSessionId === session.id && styles.sessionItemActive
+                )}
               >
-                <MessageSquare className="h-4 w-4 flex-shrink-0" />
-                <span className="sidebar-chat-title">
+                <MessageSquare className={styles.sessionIcon} />
+                <span className={styles.sessionTitle}>
                   {truncateText(session.title, 28)}
                 </span>
               </button>
@@ -135,10 +132,10 @@ const ParentChatSessionsList = ({ onSessionClick, maxItems = 20 }: ParentChatSes
 
       {/* View All Button */}
       {sessions && sessions.length > 0 && (
-        <div className="border-t border-sidebar-border p-2">
+        <div className={styles.footer}>
           <button
             onClick={handleViewAllChats}
-            className="w-full text-center text-xs text-sidebar-text-muted hover:text-sidebar-text py-2 rounded-lg hover:bg-sidebar-hover transition-colors"
+            className={styles.viewAllButton}
           >
             View all chats
           </button>

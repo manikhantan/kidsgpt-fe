@@ -1,6 +1,8 @@
+import { useEffect, useRef, useState } from 'react';
 import { Message } from '@/types';
 import ChatMessage from './ChatMessage';
-import { useEffect, useRef, useState } from 'react';
+import { Bot } from 'lucide-react';
+import styles from './MessageList.module.css';
 
 interface MessageListProps {
   messages: Message[];
@@ -79,8 +81,8 @@ const MessageList = ({ messages, streamingMessageId, scrollContainerRef }: Messa
     else if (lastMessage.role === 'assistant') {
       // If we have a spacer, we want to reduce it as the assistant message grows
       if (initialSpacerHeightRef.current > 0) {
-        // We don't need to measure assistant message directly, 
-        // we can just let the natural flow push content down, 
+        // We don't need to measure assistant message directly,
+        // we can just let the natural flow push content down,
         // BUT to keep the user message pinned at top, we need to reduce spacer
         // exactly by the amount the assistant message has grown.
 
@@ -119,41 +121,39 @@ const MessageList = ({ messages, streamingMessageId, scrollContainerRef }: Messa
     ? messages.map(m => m.role).lastIndexOf('assistant')
     : -1;
 
-  return (
-    <div className="w-full pb-4">
-      {messages.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-full text-center py-20">
-          <div className="w-16 h-16 bg-surface-secondary rounded-2xl flex items-center justify-center mb-6 shadow-sm">
-            <span className="text-4xl">👋</span>
-          </div>
-          <h2 className="text-3xl font-semibold text-text-primary mb-3 tracking-tight">
-            Hi there! I'm your AI friend!
-          </h2>
-          <p className="text-base text-text-secondary max-w-lg px-6 leading-relaxed">
-            I'm here to help you learn and explore! Ask me anything about science,
-            math, history, art, or any other topic you're curious about!
-          </p>
+  if (messages.length === 0) {
+    return (
+      <div className={styles.emptyState}>
+        <div className={styles.emptyIconWrapper}>
+          <Bot className={styles.emptyIcon} />
         </div>
-      ) : (
-        <>
-          {messages.map((message, index) => (
-            <div
-              key={message.id}
-              ref={
-                index === lastUserMessageIndex ? latestUserMessageRef :
-                  index === lastAssistantMessageIndex ? assistantMessageRef : null
-              }
-            >
-              <ChatMessage
-                message={message}
-                isStreaming={streamingMessageId === message.id}
-              />
-            </div>
-          ))}
-          {/* Dynamic Spacer */}
-          <div style={{ height: `${spacerHeight}px`, transition: 'height 0.1s ease-out' }} />
-        </>
-      )}
+        <h2 className={styles.emptyTitle}>Hi there! I'm your AI friend!</h2>
+        <p className={styles.emptyDescription}>
+          I'm here to help you learn and explore! Ask me anything about science,
+          math, history, art, or any other topic you're curious about!
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div className={styles.messagesWrapper}>
+      {messages.map((message, index) => (
+        <div
+          key={message.id}
+          ref={
+            index === lastUserMessageIndex ? latestUserMessageRef :
+              index === lastAssistantMessageIndex ? assistantMessageRef : null
+          }
+        >
+          <ChatMessage
+            message={message}
+            isStreaming={streamingMessageId === message.id}
+          />
+        </div>
+      ))}
+      {/* Dynamic Spacer */}
+      <div style={{ height: `${spacerHeight}px`, transition: 'height 0.1s ease-out' }} />
     </div>
   );
 };

@@ -5,6 +5,7 @@ import { useKidLoginMutation } from '@/store/api/apiSlice';
 import { useAuth } from '@/hooks/useAuth';
 import { ROUTES, APP_NAME } from '@/utils/constants';
 import { KidLoginFormData } from '@/utils/validators';
+import styles from './AuthPage.module.css';
 
 const KidLoginPage = () => {
   const [error, setError] = useState<string | null>(null);
@@ -29,20 +30,20 @@ const KidLoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-surface flex flex-col items-center justify-center p-4">
-      <div className="w-full max-w-sm animate-fade-in">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-semibold text-text-primary mb-2">{APP_NAME}</h1>
-          <p className="text-text-secondary">Sign in to start chatting</p>
+    <div className={styles.container}>
+      <div className={styles.contentWrapper}>
+        <div className={styles.header}>
+          <h1 className={styles.title}>{APP_NAME}</h1>
+          <p className={styles.subtitle}>Sign in to start chatting</p>
         </div>
 
-        <div className="bg-surface border border-border rounded-xl p-6">
+        <div className={styles.card}>
           <LoginForm type="child" onSubmit={handleSubmit} isLoading={isLoading} error={error} />
         </div>
 
-        <p className="text-center text-sm text-text-muted mt-6">
-          Are you a parent?{' '}
-          <Link to={ROUTES.PARENT_LOGIN} className="text-accent hover:text-accent-hover font-medium">
+        <p className={styles.switchRoleText}>
+          Are you a parent?
+          <Link to={ROUTES.PARENT_LOGIN} className={styles.switchRoleLink}>
             Sign in here
           </Link>
         </p>

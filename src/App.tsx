@@ -19,8 +19,10 @@ const KidChatPage = lazy(() => import('@/pages/kid/KidChatPage'));
 const AllChatsPage = lazy(() => import('@/pages/kid/AllChatsPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 
+import styles from './App.module.css';
+
 const PageLoader = () => (
-  <div className="min-h-screen flex items-center justify-center">
+  <div className={styles.loaderContainer}>
     <LoadingSpinner size="lg" text="Loading..." />
   </div>
 );

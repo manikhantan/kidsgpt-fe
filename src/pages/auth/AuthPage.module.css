@@ -1,0 +1,112 @@
+.container {
+    min-height: 100vh;
+    background-color: var(--color-bg-app);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+}
+
+.contentWrapper {
+    width: 100%;
+    max-width: 24rem;
+    /* max-w-sm */
+    animation: fadeIn 0.5s ease-out;
+}
+
+.header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.title {
+    font-size: 1.875rem;
+    font-weight: 600;
+    color: var(--color-text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    color: var(--color-text-secondary);
+}
+
+.card {
+    background-color: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-xl);
+    padding: 1.5rem;
+    box-shadow: var(--shadow-lg);
+}
+
+.footer {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--color-border);
+}
+
+.footerText {
+    font-size: 0.875rem;
+    color: var(--color-text-secondary);
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.createAccountLink {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    width: 100%;
+    padding: 0.625rem 1rem;
+    border: 1px solid var(--color-border);
+    color: var(--color-text-primary);
+    font-weight: 500;
+    border-radius: var(--radius-lg);
+    transition: all var(--transition-fast);
+}
+
+.createAccountLink:hover {
+    background-color: var(--color-bg-surface-hover);
+    border-color: var(--color-border-light);
+}
+
+.arrowIcon {
+    width: 1rem;
+    height: 1rem;
+    transition: transform var(--transition-fast);
+}
+
+.createAccountLink:hover .arrowIcon {
+    transform: translateX(2px);
+}
+
+.switchRoleText {
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--color-text-muted);
+    margin-top: 1.5rem;
+}
+
+.switchRoleLink {
+    color: var(--color-accent);
+    font-weight: 500;
+    margin-left: 0.25rem;
+}
+
+.switchRoleLink:hover {
+    color: var(--color-accent-hover);
+    text-decoration: underline;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

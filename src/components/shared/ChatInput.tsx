@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from 'react';
 import { ArrowUp } from 'lucide-react';
+import styles from './ChatInput.module.css';
+import { clsx } from 'clsx';
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -34,10 +36,12 @@ const ChatInput = ({ onSend, isLoading = false, disabled = false }: ChatInputPro
     }
   }, [message]);
 
+  const isSendEnabled = message.trim() && !isLoading && !disabled;
+
   return (
-    <div className="border-t border-border bg-surface px-4 py-4 md:py-6">
-      <form onSubmit={handleSubmit} className="max-w-3xl mx-auto">
-        <div className="relative">
+    <div className={styles.container}>
+      <form onSubmit={handleSubmit} className={styles.form}>
+        <div className={styles.inputWrapper}>
           <textarea
             ref={textareaRef}
             value={message}
@@ -46,31 +50,24 @@ const ChatInput = ({ onSend, isLoading = false, disabled = false }: ChatInputPro
             placeholder="Message KidsGPT..."
             disabled={isLoading || disabled}
             rows={1}
-            className="w-full rounded-3xl border border-border bg-surface px-5 py-4 pr-14
-                       text-text-primary placeholder-text-muted resize-none
-                       focus:outline-none focus:border-text-primary/30 focus:shadow-sm
-                       disabled:bg-surface-secondary disabled:cursor-not-allowed
-                       transition-all duration-200"
-            style={{ minHeight: '56px', maxHeight: '200px' }}
+            className={styles.textarea}
           />
           <button
             type="submit"
-            disabled={!message.trim() || isLoading || disabled}
-            className={`absolute right-3 bottom-3 p-2 rounded-full transition-all duration-200
-                       ${
-                         message.trim() && !isLoading && !disabled
-                           ? 'bg-text-primary text-white hover:bg-text-secondary shadow-sm'
-                           : 'bg-border text-text-muted cursor-not-allowed'
-                       }`}
+            disabled={!isSendEnabled}
+            className={clsx(
+              styles.sendButton,
+              isSendEnabled ? styles.sendButtonActive : styles.sendButtonDisabled
+            )}
           >
             {isLoading ? (
-              <div className="h-5 w-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              <div className={styles.spinner} />
             ) : (
-              <ArrowUp className="h-5 w-5" strokeWidth={2.5} />
+              <ArrowUp size={20} strokeWidth={2.5} />
             )}
           </button>
         </div>
-        <p className="text-xs text-text-muted text-center mt-3 px-2">
+        <p className={styles.disclaimer}>
           KidsGPT can make mistakes. Check important info.
         </p>
       </form>

@@ -1,0 +1,45 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.errorAlert {
+    background-color: var(--color-bg-surface-secondary);
+    border: 1px solid var(--color-error);
+    color: var(--color-error);
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-lg);
+    font-size: 0.875rem;
+}
+
+.inputWrapper {
+    position: relative;
+}
+
+.inputIcon {
+    position: absolute;
+    left: 0.75rem;
+    top: 2.25rem;
+    /* Adjusted for label height */
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--color-text-muted);
+    pointer-events: none;
+    z-index: 10;
+}
+
+/* Custom class to pass to Input component */
+.inputWithIcon {
+    padding-left: 2.5rem;
+}
+
+.actions {
+    display: flex;
+    gap: 0.75rem;
+    padding-top: 0.5rem;
+}
+
+.actionButton {
+    flex: 1;
+}

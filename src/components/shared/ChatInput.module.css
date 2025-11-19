@@ -1,0 +1,108 @@
+.container {
+    border-top: 1px solid var(--color-border);
+    background-color: var(--color-bg-app);
+    padding: 1rem;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+}
+
+.form {
+    max-width: 48rem;
+    margin: 0 auto;
+    position: relative;
+}
+
+.inputWrapper {
+    position: relative;
+    border-radius: 1.5rem;
+    background-color: var(--color-bg-surface);
+    border: 1px solid var(--color-border);
+    box-shadow: var(--shadow-sm);
+    transition: all var(--transition-normal);
+}
+
+.inputWrapper:focus-within {
+    border-color: var(--color-border-light);
+    box-shadow: var(--shadow-md);
+    background-color: var(--color-bg-surface-hover);
+}
+
+.textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    padding: 1rem 3.5rem 1rem 1.25rem;
+    color: var(--color-text-primary);
+    font-family: inherit;
+    font-size: 1rem;
+    line-height: 1.5;
+    resize: none;
+    outline: none;
+    min-height: 56px;
+    max-height: 200px;
+}
+
+.textarea::placeholder {
+    color: var(--color-text-muted);
+}
+
+.sendButton {
+    position: absolute;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2rem;
+    height: 2rem;
+    border-radius: var(--radius-full);
+    border: none;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+    padding: 0;
+}
+
+.sendButtonActive {
+    background-color: var(--color-accent);
+    color: white;
+}
+
+.sendButtonActive:hover {
+    background-color: var(--color-accent-hover);
+    transform: scale(1.05);
+}
+
+.sendButtonDisabled {
+    background-color: var(--color-bg-surface-hover);
+    color: var(--color-text-muted);
+    cursor: not-allowed;
+}
+
+.spinner {
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.disclaimer {
+    text-align: center;
+    font-size: 0.75rem;
+    color: var(--color-text-muted);
+    margin-top: 0.75rem;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        padding: 1.5rem;
+    }
+}

@@ -1,0 +1,42 @@
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.error {
+    background-color: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: #ef4444;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    font-size: 0.875rem;
+}
+
+.inputWrapper {
+    position: relative;
+}
+
+.icon {
+    position: absolute;
+    left: 0.75rem;
+    top: 2.25rem;
+    /* Adjusted for label height */
+    width: 1.25rem;
+    height: 1.25rem;
+    color: var(--color-text-muted);
+    pointer-events: none;
+}
+
+/* We need to target the input inside the Input component to add padding */
+/* This might require passing a className to Input or handling it in Input module */
+/* Since Input accepts className, we can use a global utility or a specific class passed down */
+/* But CSS Modules hash classes. So we'll pass a class from this module */
+
+.inputWithIcon {
+    padding-left: 2.5rem;
+}
+
+.submitButton {
+    width: 100%;
+}

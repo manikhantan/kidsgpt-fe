@@ -5,6 +5,7 @@ import BlockedNotification from './BlockedNotification';
 import { useAppSelector } from '@/store/hooks';
 import { useStreamingChat } from '@/hooks/useStreamingChat';
 import { Sparkles } from 'lucide-react';
+import styles from './ChatInterface.module.css';
 
 const ChatInterface = () => {
   const {
@@ -39,27 +40,27 @@ const ChatInterface = () => {
   const showEmptyState = messages.length === 0 && !isStreaming;
 
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex-1 flex flex-col min-h-0">
+    <div className={styles.container}>
+      <div className={styles.contentWrapper}>
         {showEmptyState ? (
-          <div className="flex-1 flex items-center justify-center bg-surface">
-            <div className="text-center max-w-2xl mx-auto px-6">
-              <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-surface-dark to-gray-800 flex items-center justify-center mx-auto mb-8 shadow-lg">
-                <Sparkles className="h-10 w-10 text-white" />
+          <div className={styles.emptyState}>
+            <div className={styles.emptyContent}>
+              <div className={styles.emptyIconWrapper}>
+                <Sparkles className={styles.emptyIcon} />
               </div>
-              <h2 className="text-3xl font-semibold text-text-primary mb-3 tracking-tight">
+              <h2 className={styles.emptyTitle}>
                 How can I help you today?
               </h2>
-              <p className="text-base text-text-secondary leading-relaxed">
+              <p className={styles.emptyDescription}>
                 Ask me anything! I'm here to help with homework, answer questions, or just have a conversation.
               </p>
             </div>
           </div>
         ) : (
-          <div ref={scrollContainerRef} className="flex-1 overflow-y-auto scrollbar-thin">
+          <div ref={scrollContainerRef} className={styles.messagesArea}>
             <MessageList messages={messages} streamingMessageId={streamingMessageId} scrollContainerRef={scrollContainerRef} />
             {blockedInfo.show && (
-              <div className="max-w-3xl mx-auto px-6 pb-4">
+              <div className={styles.blockedNotificationWrapper}>
                 <BlockedNotification allowedTopics={blockedInfo.allowedTopics} />
               </div>
             )}
