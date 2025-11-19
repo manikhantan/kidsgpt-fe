@@ -20,7 +20,6 @@
     flex-direction: column;
     height: 100%;
     background-color: var(--color-bg-app);
-    margin: -1.5rem -2rem;
 }
 
 .header {
