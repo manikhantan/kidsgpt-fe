@@ -1,8 +1,10 @@
 import { useRef } from 'react';
+import { Sparkles } from 'lucide-react';
 import MessageList from '@/components/shared/MessageList';
 import ChatInput from '@/components/shared/ChatInput';
 import { useAppSelector } from '@/store/hooks';
 import { useStreamingChat } from '@/hooks/useStreamingChat';
+import styles from './ParentChatInterface.module.css';
 
 const ParentChatInterface = () => {
   const {
@@ -22,12 +24,30 @@ const ParentChatInterface = () => {
     });
   };
 
+  const showEmptyState = messages.length === 0 && !isStreaming;
+
   return (
-    <div className="flex flex-col h-full">
-      <div className="flex-1 flex flex-col min-h-0">
-        <div ref={scrollContainerRef} className="flex-1 overflow-y-auto scrollbar-thin">
-          <MessageList messages={messages} streamingMessageId={streamingMessageId} scrollContainerRef={scrollContainerRef} />
-        </div>
+    <div className={styles.container}>
+      <div className={styles.contentWrapper}>
+        {showEmptyState ? (
+          <div className={styles.emptyState}>
+            <div className={styles.emptyContent}>
+              <div className={styles.emptyIconWrapper}>
+                <Sparkles className={styles.emptyIcon} />
+              </div>
+              <h2 className={styles.emptyTitle}>
+                How can I help you today?
+              </h2>
+              <p className={styles.emptyDescription}>
+                I'm here to assist you with parenting advice, content control, or any questions you might have.
+              </p>
+            </div>
+          </div>
+        ) : (
+          <div ref={scrollContainerRef} className={styles.messagesArea}>
+            <MessageList messages={messages} streamingMessageId={streamingMessageId} scrollContainerRef={scrollContainerRef} />
+          </div>
+        )}
 
         <ChatInput onSend={handleSendMessage} isLoading={isStreaming} />
       </div>

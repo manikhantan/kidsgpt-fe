@@ -4,6 +4,7 @@ import { Mail, Lock, User } from 'lucide-react';
 import Input from '@/components/shared/Input';
 import Button from '@/components/shared/Button';
 import { parentRegisterSchema, ParentRegisterFormData } from '@/utils/validators';
+import styles from './RegisterForm.module.css';
 
 interface RegisterFormProps {
   onSubmit: (data: ParentRegisterFormData) => void;
@@ -21,64 +22,64 @@ const RegisterForm = ({ onSubmit, isLoading = false, error }: RegisterFormProps)
   });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
+        <div className={styles.error}>
           {error}
         </div>
       )}
 
-      <div className="relative">
-        <User className="absolute left-3 top-9 h-5 w-5 text-gray-400" />
+      <div className={styles.inputWrapper}>
+        <User className={styles.icon} />
         <Input
           {...register('name')}
           type="text"
           label="Full Name"
           placeholder="Enter your name"
           error={errors.name?.message}
-          className="pl-10"
+          className={styles.inputWithIcon}
         />
       </div>
 
-      <div className="relative">
-        <Mail className="absolute left-3 top-9 h-5 w-5 text-gray-400" />
+      <div className={styles.inputWrapper}>
+        <Mail className={styles.icon} />
         <Input
           {...register('email')}
           type="email"
           label="Email"
           placeholder="Enter your email"
           error={errors.email?.message}
-          className="pl-10"
+          className={styles.inputWithIcon}
         />
       </div>
 
-      <div className="relative">
-        <Lock className="absolute left-3 top-9 h-5 w-5 text-gray-400" />
+      <div className={styles.inputWrapper}>
+        <Lock className={styles.icon} />
         <Input
           {...register('password')}
           type="password"
           label="Password"
           placeholder="Create a password"
           error={errors.password?.message}
-          className="pl-10"
+          className={styles.inputWithIcon}
         />
       </div>
 
-      <div className="relative">
-        <Lock className="absolute left-3 top-9 h-5 w-5 text-gray-400" />
+      <div className={styles.inputWrapper}>
+        <Lock className={styles.icon} />
         <Input
           {...register('confirmPassword')}
           type="password"
           label="Confirm Password"
           placeholder="Confirm your password"
           error={errors.confirmPassword?.message}
-          className="pl-10"
+          className={styles.inputWithIcon}
         />
       </div>
 
       <Button
         type="submit"
-        className="w-full"
+        className={styles.submitButton}
         isLoading={isLoading}
         disabled={isLoading}
       >

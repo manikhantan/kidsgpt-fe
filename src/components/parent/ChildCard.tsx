@@ -5,6 +5,7 @@ import Button from '@/components/shared/Button';
 import { Child } from '@/types';
 import { formatDate } from '@/utils/formatters';
 import { ROUTES } from '@/utils/constants';
+import styles from './ChildCard.module.css';
 
 interface ChildCardProps {
   child: Child;
@@ -15,25 +16,25 @@ const ChildCard = ({ child, onDelete }: ChildCardProps) => {
   const navigate = useNavigate();
 
   return (
-    <Card className="hover:shadow-md transition-shadow">
-      <div className="flex items-start justify-between">
-        <div className="flex items-center gap-3">
-          <div className="bg-primary-100 p-3 rounded-full">
-            <User className="h-6 w-6 text-primary-600" />
+    <Card className={styles.card}>
+      <div className={styles.header}>
+        <div className={styles.infoWrapper}>
+          <div className={styles.avatar}>
+            <User className={styles.avatarIcon} />
           </div>
           <div>
-            <h3 className="text-lg font-semibold text-gray-900">{child.name}</h3>
-            <p className="text-sm text-gray-500">{child.email}</p>
+            <h3 className={styles.name}>{child.name}</h3>
+            <p className={styles.email}>{child.email}</p>
           </div>
         </div>
       </div>
 
-      <div className="mt-4 flex items-center gap-2 text-sm text-gray-600">
-        <Calendar className="h-4 w-4" />
+      <div className={styles.meta}>
+        <Calendar className={styles.metaIcon} />
         <span>Created {formatDate(child.createdAt)}</span>
       </div>
 
-      <div className="mt-4 flex gap-2">
+      <div className={styles.actions}>
         <Button
           variant="ghost"
           size="sm"

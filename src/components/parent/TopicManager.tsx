@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { X, Plus } from 'lucide-react';
 import Input from '@/components/shared/Input';
 import Button from '@/components/shared/Button';
+import styles from './TopicManager.module.css';
 
 interface TopicManagerProps {
   label: string;
@@ -36,37 +37,34 @@ const TopicManager = ({
   };
 
   return (
-    <div className="space-y-3">
-      <label className="block text-sm font-medium text-gray-700">{label}</label>
+    <div className={styles.container}>
+      <label className={styles.label}>{label}</label>
 
-      <div className="flex gap-2">
+      <div className={styles.inputGroup}>
         <Input
           value={newItem}
           onChange={(e) => setNewItem(e.target.value)}
           onKeyDown={handleKeyPress}
           placeholder={placeholder}
-          className="flex-1"
+          className={styles.input}
         />
         <Button onClick={handleAdd} leftIcon={<Plus className="h-4 w-4" />}>
           Add
         </Button>
       </div>
 
-      <div className="flex flex-wrap gap-2">
+      <div className={styles.tagsContainer}>
         {items.length === 0 ? (
-          <p className="text-sm text-gray-500 italic">No items added yet</p>
+          <p className={styles.emptyText}>No items added yet</p>
         ) : (
           items.map((item) => (
-            <span
-              key={item}
-              className="inline-flex items-center gap-1 bg-gray-100 text-gray-800 px-3 py-1 rounded-full text-sm"
-            >
+            <span key={item} className={styles.tag}>
               {item}
               <button
                 onClick={() => onRemove(item)}
-                className="text-gray-500 hover:text-red-500 focus:outline-none"
+                className={styles.removeButton}
               >
-                <X className="h-4 w-4" />
+                <X className={styles.removeIcon} />
               </button>
             </span>
           ))

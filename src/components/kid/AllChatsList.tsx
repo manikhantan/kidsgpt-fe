@@ -8,9 +8,9 @@ import { ChatSessionSummary } from '@/types';
 import LoadingSpinner from '@/components/shared/LoadingSpinner';
 import ErrorMessage from '@/components/shared/ErrorMessage';
 import Button from '@/components/shared/Button';
-import Card from '@/components/shared/Card';
 import { useLoadChatSession } from '@/hooks/useLoadChatSession';
 import { useCreateNewChat } from '@/hooks/useCreateNewChat';
+import styles from './AllChatsList.module.css';
 
 const AllChatsList = () => {
   const navigate = useNavigate();
@@ -80,7 +80,7 @@ const AllChatsList = () => {
 
   if (isLoading && page === 1) {
     return (
-      <div className="flex items-center justify-center h-full bg-gradient-to-br from-yellow-50 to-orange-50">
+      <div className={styles.loadingContainer}>
         <LoadingSpinner size="lg" text="Loading your chats..." />
       </div>
     );
@@ -88,7 +88,7 @@ const AllChatsList = () => {
 
   if (error && page === 1) {
     return (
-      <div className="flex items-center justify-center h-full bg-gradient-to-br from-yellow-50 to-orange-50 p-4">
+      <div className={styles.errorContainer}>
         <ErrorMessage
           message="Oops! We couldn't load your chats. Please try again!"
           onRetry={refetch}
@@ -98,19 +98,19 @@ const AllChatsList = () => {
   }
 
   return (
-    <div className="flex flex-col h-full bg-gray-50">
+    <div className={styles.container}>
       {/* Header */}
-      <div className="bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-3">
+      <div className={styles.header}>
+        <div className={styles.headerLeft}>
           <Button variant="ghost" size="sm" onClick={handleBack}>
-            <ArrowLeft className="h-5 w-5" />
+            <ArrowLeft size={20} />
           </Button>
-          <h1 className="text-xl font-semibold text-gray-900">All Chats</h1>
+          <h1 className={styles.title}>All Chats</h1>
         </div>
         <Button
           variant="primary"
           size="sm"
-          leftIcon={<Plus className="h-4 w-4" />}
+          leftIcon={<Plus size={16} />}
           onClick={handleNewChat}
           disabled={isCurrentConversationEmpty}
           title={isCurrentConversationEmpty ? 'Send a message first to start a new chat' : undefined}
@@ -120,66 +120,66 @@ const AllChatsList = () => {
       </div>
 
       {/* Chat list */}
-      <div className="flex-1 overflow-y-auto p-4">
+      <div className={styles.list}>
         {allSessions.length === 0 ? (
-          <Card className="p-8 text-center">
-            <MessageSquare className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-gray-900 mb-2">No chats yet</h3>
-            <p className="text-gray-500 mb-4">Start a new conversation to see it here!</p>
+          <div className={styles.emptyCard}>
+            <MessageSquare className={styles.emptyIcon} />
+            <h3 className={styles.emptyTitle}>No chats yet</h3>
+            <p className={styles.emptyText}>Start a new conversation to see it here!</p>
             <Button
               variant="primary"
-              leftIcon={<Plus className="h-4 w-4" />}
+              leftIcon={<Plus size={16} />}
               onClick={handleNewChat}
               disabled={isCurrentConversationEmpty}
               title={isCurrentConversationEmpty ? 'Send a message first to start a new chat' : undefined}
             >
               Start New Chat
             </Button>
-          </Card>
+          </div>
         ) : (
-          <div className="space-y-3">
+          <div className={styles.sessionsGrid}>
             {allSessions.map((session) => (
-              <Card
+              <div
                 key={session.id}
-                className="p-4 cursor-pointer hover:shadow-md transition-shadow"
+                className={styles.sessionCard}
                 onClick={() => handleSessionClick(session)}
               >
-                <div className="flex items-start gap-3">
-                  <div className="p-2 bg-primary-50 rounded-lg">
-                    <MessageCircle className="h-5 w-5 text-primary-600" />
+                <div className={styles.sessionContent}>
+                  <div className={styles.sessionIconWrapper}>
+                    <MessageCircle className={styles.sessionIcon} />
                   </div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-base font-medium text-gray-900 truncate">
+                  <div className={styles.sessionDetails}>
+                    <h3 className={styles.sessionTitle}>
                       {session.title}
                     </h3>
                     {session.preview && (
-                      <p className="text-sm text-gray-500 mt-1 line-clamp-2">
+                      <p className={styles.sessionPreview}>
                         {truncateText(session.preview, 100)}
                       </p>
                     )}
-                    <div className="flex items-center gap-4 mt-2 text-xs text-gray-400">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="h-3 w-3" />
+                    <div className={styles.sessionMeta}>
+                      <span className={styles.metaItem}>
+                        <Calendar className={styles.metaIcon} />
                         {formatDate(session.startedAt)}
                       </span>
-                      <span className="flex items-center gap-1">
-                        <MessageSquare className="h-3 w-3" />
+                      <span className={styles.metaItem}>
+                        <MessageSquare className={styles.metaIcon} />
                         {session.messageCount} messages
                       </span>
                       <span>{formatRelativeTime(session.lastMessageAt)}</span>
                     </div>
                   </div>
                 </div>
-              </Card>
+              </div>
             ))}
 
             {/* Loading indicator for infinite scroll */}
-            <div ref={loadingRef} className="py-4 text-center">
+            <div ref={loadingRef} className={styles.loadingMore}>
               {isFetching && hasMore && (
                 <LoadingSpinner size="sm" text="Loading more chats..." />
               )}
               {!hasMore && allSessions.length > 0 && (
-                <p className="text-sm text-gray-500">You've reached the end!</p>
+                <p className={styles.endMessage}>You've reached the end!</p>
               )}
             </div>
           </div>

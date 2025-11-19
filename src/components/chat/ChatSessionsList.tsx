@@ -6,6 +6,8 @@ import { ROUTES } from '@/utils/constants';
 import { truncateText } from '@/utils/formatters';
 import { ChatSessionSummary } from '@/types';
 import { useLoadChatSession } from '@/hooks/useLoadChatSession';
+import { clsx } from 'clsx';
+import styles from './ChatSessionsList.module.css';
 
 interface ChatSessionsListProps {
   onSessionClick?: () => void;
@@ -35,11 +37,11 @@ const ChatSessionsList = ({ onSessionClick, maxItems = 20 }: ChatSessionsListPro
 
   if (isLoading) {
     return (
-      <div className="py-8 flex justify-center">
-        <div className="flex gap-1">
-          <div className="w-2 h-2 bg-sidebar-text-muted rounded-full animate-pulse" />
-          <div className="w-2 h-2 bg-sidebar-text-muted rounded-full animate-pulse" style={{ animationDelay: '150ms' }} />
-          <div className="w-2 h-2 bg-sidebar-text-muted rounded-full animate-pulse" style={{ animationDelay: '300ms' }} />
+      <div className={styles.loading}>
+        <div className={styles.loadingDots}>
+          <div className={styles.dot} />
+          <div className={styles.dot} style={{ animationDelay: '150ms' }} />
+          <div className={styles.dot} style={{ animationDelay: '300ms' }} />
         </div>
       </div>
     );
@@ -47,8 +49,8 @@ const ChatSessionsList = ({ onSessionClick, maxItems = 20 }: ChatSessionsListPro
 
   if (error) {
     return (
-      <div className="py-4 px-3">
-        <div className="text-xs text-error bg-error/10 rounded-lg p-3">
+      <div className={styles.error}>
+        <div className={styles.errorMessage}>
           Failed to load chat sessions
         </div>
       </div>
@@ -56,39 +58,38 @@ const ChatSessionsList = ({ onSessionClick, maxItems = 20 }: ChatSessionsListPro
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className={styles.container}>
       {/* Sessions List */}
-      <div className="flex-1 overflow-y-auto py-2 scrollbar-thin">
+      <div className={styles.list}>
         {sessions && sessions.length > 0 && (
-          <div className="mb-2 px-3">
-            <span className="text-xs font-medium text-sidebar-text-muted uppercase tracking-wider">
+          <div className={styles.sectionHeader}>
+            <span className={styles.sectionTitle}>
               Recent
             </span>
           </div>
         )}
 
         {(!sessions || sessions.length === 0) ? (
-          <div className="px-3 py-8 text-center">
-            <MessageSquare className="h-8 w-8 text-sidebar-text-muted mx-auto mb-3 opacity-50" />
-            <p className="text-sm text-sidebar-text-muted">No chat history</p>
-            <p className="text-xs text-sidebar-text-muted mt-1 opacity-75">
+          <div className={styles.emptyState}>
+            <MessageSquare className={styles.emptyIcon} />
+            <p className={styles.emptyText}>No chat history</p>
+            <p className={styles.emptySubtext}>
               Start a conversation
             </p>
           </div>
         ) : (
-          <div className="space-y-0.5">
+          <div className={styles.items}>
             {sessions.map((session) => (
               <button
                 key={session.id}
                 onClick={() => handleSessionClick(session)}
-                className={
-                  currentSessionId === session.id
-                    ? 'sidebar-chat-item-active w-full text-left'
-                    : 'sidebar-chat-item w-full text-left'
-                }
+                className={clsx(
+                  styles.item,
+                  currentSessionId === session.id && styles.itemActive
+                )}
               >
-                <MessageSquare className="h-4 w-4 flex-shrink-0" />
-                <span className="sidebar-chat-title">
+                <MessageSquare className={styles.itemIcon} />
+                <span className={styles.itemTitle}>
                   {truncateText(session.title, 28)}
                 </span>
               </button>
@@ -99,10 +100,10 @@ const ChatSessionsList = ({ onSessionClick, maxItems = 20 }: ChatSessionsListPro
 
       {/* View All Button */}
       {sessions && sessions.length > 0 && (
-        <div className="border-t border-sidebar-border p-2">
+        <div className={styles.footer}>
           <button
             onClick={handleViewAllChats}
-            className="w-full text-center text-xs text-sidebar-text-muted hover:text-sidebar-text py-2 rounded-lg hover:bg-sidebar-hover transition-colors"
+            className={styles.viewAllButton}
           >
             View all chats
           </button>

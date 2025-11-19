@@ -4,6 +4,7 @@ import { User, Lock, Mail } from 'lucide-react';
 import Input from '@/components/shared/Input';
 import Button from '@/components/shared/Button';
 import { createChildSchema, CreateChildFormData } from '@/utils/validators';
+import styles from './CreateChildForm.module.css';
 
 interface CreateChildFormProps {
   onSubmit: (data: CreateChildFormData) => void;
@@ -27,27 +28,27 @@ const CreateChildForm = ({
   });
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form onSubmit={handleSubmit(onSubmit)} className={styles.form}>
       {error && (
-        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+        <div className={styles.errorAlert}>
           {error}
         </div>
       )}
 
-      <div className="relative">
-        <User className="absolute left-3 top-9 h-5 w-5 text-gray-400" />
+      <div className={styles.inputWrapper}>
+        <User className={styles.inputIcon} />
         <Input
           {...register('name')}
           type="text"
           label="Child's Name"
           placeholder="Enter child's name"
           error={errors.name?.message}
-          className="pl-10"
+          className={styles.inputWithIcon}
         />
       </div>
 
-      <div className="relative">
-        <Mail className="absolute left-3 top-9 h-5 w-5 text-gray-400" />
+      <div className={styles.inputWrapper}>
+        <Mail className={styles.inputIcon} />
         <Input
           {...register('email')}
           type="email"
@@ -55,41 +56,41 @@ const CreateChildForm = ({
           placeholder="Enter child's email"
           error={errors.email?.message}
           helperText="This will be used for login"
-          className="pl-10"
+          className={styles.inputWithIcon}
         />
       </div>
 
-      <div className="relative">
-        <Lock className="absolute left-3 top-9 h-5 w-5 text-gray-400" />
+      <div className={styles.inputWrapper}>
+        <Lock className={styles.inputIcon} />
         <Input
           {...register('password')}
           type="password"
           label="Password"
           placeholder="Create a password"
           error={errors.password?.message}
-          className="pl-10"
+          className={styles.inputWithIcon}
         />
       </div>
 
-      <div className="relative">
-        <Lock className="absolute left-3 top-9 h-5 w-5 text-gray-400" />
+      <div className={styles.inputWrapper}>
+        <Lock className={styles.inputIcon} />
         <Input
           {...register('confirmPassword')}
           type="password"
           label="Confirm Password"
           placeholder="Confirm password"
           error={errors.confirmPassword?.message}
-          className="pl-10"
+          className={styles.inputWithIcon}
         />
       </div>
 
-      <div className="flex gap-3 pt-2">
-        <Button type="button" variant="ghost" onClick={onCancel} className="flex-1">
+      <div className={styles.actions}>
+        <Button type="button" variant="ghost" onClick={onCancel} className={styles.actionButton}>
           Cancel
         </Button>
         <Button
           type="submit"
-          className="flex-1"
+          className={styles.actionButton}
           isLoading={isLoading}
           disabled={isLoading}
         >

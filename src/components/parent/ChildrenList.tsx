@@ -12,6 +12,7 @@ import {
   useDeleteChildMutation,
 } from '@/store/api/apiSlice';
 import { CreateChildFormData } from '@/utils/validators';
+import styles from './ChildrenList.module.css';
 
 const ChildrenList = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -47,7 +48,7 @@ const ChildrenList = () => {
   };
 
   if (isLoading) {
-    return <LoadingSpinner size="lg" text="Loading children..." className="py-12" />;
+    return <LoadingSpinner size="lg" text="Loading children..." className={styles.loadingContainer} />;
   }
 
   if (error) {
@@ -61,8 +62,8 @@ const ChildrenList = () => {
 
   return (
     <div>
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-900">Children</h2>
+      <div className={styles.header}>
+        <h2 className={styles.title}>Children</h2>
         <Button
           leftIcon={<UserPlus className="h-4 w-4" />}
           onClick={() => setIsModalOpen(true)}
@@ -72,16 +73,16 @@ const ChildrenList = () => {
       </div>
 
       {children?.length === 0 ? (
-        <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <UserPlus className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-          <h3 className="text-lg font-medium text-gray-900 mb-2">No children yet</h3>
-          <p className="text-gray-600 mb-4">
+        <div className={styles.emptyState}>
+          <UserPlus className={styles.emptyIcon} />
+          <h3 className={styles.emptyTitle}>No children yet</h3>
+          <p className={styles.emptyDescription}>
             Create a child account to get started.
           </p>
           <Button onClick={() => setIsModalOpen(true)}>Add Your First Child</Button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className={styles.grid}>
           {children?.map((child) => (
             <ChildCard
               key={child.id}
@@ -117,12 +118,12 @@ const ChildrenList = () => {
         title="Delete Child Account"
         size="sm"
       >
-        <div className="space-y-4">
-          <p className="text-gray-600">
+        <div className={styles.deleteModalContent}>
+          <p className={styles.deleteWarning}>
             Are you sure you want to delete this child account? This action cannot be
             undone and all chat history will be lost.
           </p>
-          <div className="flex gap-3">
+          <div className={styles.modalActions}>
             <Button
               variant="ghost"
               onClick={() => setDeleteConfirmId(null)}
