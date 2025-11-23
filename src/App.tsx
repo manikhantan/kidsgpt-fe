@@ -17,6 +17,7 @@ const ParentChatPage = lazy(() => import('@/pages/parent/ParentChatPage'));
 const AllParentChatsPage = lazy(() => import('@/pages/parent/AllParentChatsPage'));
 const KidChatPage = lazy(() => import('@/pages/kid/KidChatPage'));
 const AllChatsPage = lazy(() => import('@/pages/kid/AllChatsPage'));
+const FutureProgressPage = lazy(() => import('@/pages/kid/FutureProgressPage'));
 const NotFoundPage = lazy(() => import('@/pages/NotFoundPage'));
 
 import styles from './App.module.css';
@@ -74,6 +75,7 @@ const App = () => {
                   <Routes>
                     <Route path="chat" element={<KidChatPage />} />
                     <Route path="all-chats" element={<AllChatsPage />} />
+                    <Route path="progress" element={<FutureProgressPage />} />
                     <Route
                       path="*"
                       element={<Navigate to={ROUTES.KID_CHAT} replace />}

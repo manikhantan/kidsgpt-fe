@@ -4,6 +4,7 @@ import authReducer from './slices/authSlice';
 import childrenReducer from './slices/childrenSlice';
 import contentRulesReducer from './slices/contentRulesSlice';
 import chatReducer from './slices/chatSlice';
+import futureSelfReducer from './slices/futureSelfSlice';
 
 export const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ export const store = configureStore({
     children: childrenReducer,
     contentRules: contentRulesReducer,
     chat: chatReducer,
+    futureSelf: futureSelfReducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().concat(apiSlice.middleware),

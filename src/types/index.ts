@@ -5,3 +5,4 @@ export * from './contentRule';
 export * from './api';
 export * from './insights';
 export * from './streaming';
+export * from './futureIdentity';

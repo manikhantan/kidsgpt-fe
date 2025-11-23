@@ -18,6 +18,7 @@ export const ROUTES = {
   PARENT_ALL_CHATS: '/parent/all-chats',
   KID_CHAT: '/kid/chat',
   KID_ALL_CHATS: '/kid/all-chats',
+  KID_PROGRESS: '/kid/progress',
 } as const;
 
 export const API_ENDPOINTS = {
