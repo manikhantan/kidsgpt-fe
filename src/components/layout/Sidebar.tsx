@@ -7,15 +7,18 @@ import {
   MessageCircle,
   Plus,
   ChevronDown,
-  Lightbulb
+  Lightbulb,
+  TrendingUp
 } from 'lucide-react';
 import { clsx } from 'clsx';
 import { ROUTES } from '@/utils/constants';
 import { useAppSelector } from '@/store/hooks';
 import ChatSessionsList from '@/components/chat/ChatSessionsList';
 import ParentChatSessionsList from '@/components/parent/ParentChatSessionsList';
+import TimelineDashboard from '@/components/future-self/TimelineDashboard';
 import { useCreateNewChat } from '@/hooks/useCreateNewChat';
 import { useCreateNewParentChat } from '@/hooks/useCreateNewParentChat';
+import { useFutureSelf } from '@/hooks/useFutureSelf';
 import styles from './Sidebar.module.css';
 
 interface SidebarProps {
@@ -57,6 +60,11 @@ const kidNavItems = [
     icon: MessageCircle,
     label: 'Chat',
   },
+  {
+    to: ROUTES.KID_PROGRESS,
+    icon: TrendingUp,
+    label: 'Progress',
+  },
 ];
 
 const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
@@ -65,6 +73,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
   const isParent = user?.role === 'parent';
   const isKid = user?.role === 'child';
   const navItems = isParent ? parentNavItems : kidNavItems;
+  const { hasIdentity } = useFutureSelf();
 
   const isParentOnChatPage = isParent && (
     location.pathname === ROUTES.PARENT_CHAT ||
@@ -111,6 +120,13 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
       {/* Content */}
       <div className={styles.content}>
+        {/* Timeline Dashboard for kids with identity */}
+        {isKid && hasIdentity && (
+          <div style={{ marginBottom: '1rem' }}>
+            <TimelineDashboard />
+          </div>
+        )}
+
         {isKid ? (
           <ChatSessionsList onSessionClick={() => {
             if (window.innerWidth < 1024) onClose();

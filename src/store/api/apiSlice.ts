@@ -16,6 +16,11 @@ import {
   ChatSession,
   ChildInsightsDashboard,
   RefreshInsightsResponse,
+  FutureIdentity,
+  TimelineStatus,
+  Achievement,
+  TimelineMilestone,
+  CreateFutureIdentityRequest,
 } from '@/types';
 
 const baseQuery = fetchBaseQuery({
@@ -32,7 +37,7 @@ const baseQuery = fetchBaseQuery({
 export const apiSlice = createApi({
   reducerPath: 'api',
   baseQuery,
-  tagTypes: ['Children', 'ContentRules', 'ChatHistory', 'Messages', 'Analytics', 'ChatSessions', 'ParentChatSessions', 'Insights'],
+  tagTypes: ['Children', 'ContentRules', 'ChatHistory', 'Messages', 'Analytics', 'ChatSessions', 'ParentChatSessions', 'Insights', 'FutureIdentity', 'Timeline', 'Achievements'],
   endpoints: (builder) => ({
     // Auth endpoints
     parentRegister: builder.mutation<
@@ -201,6 +206,53 @@ export const apiSlice = createApi({
       }),
       invalidatesTags: ['ChatSessions'],
     }),
+
+    // Future Identity endpoints
+    getFutureIdentity: builder.query<FutureIdentity, void>({
+      query: () => '/api/kid/future-identity',
+      providesTags: ['FutureIdentity'],
+    }),
+
+    createFutureIdentity: builder.mutation<FutureIdentity, CreateFutureIdentityRequest>({
+      query: (data) => ({
+        url: '/api/kid/future-identity',
+        method: 'POST',
+        body: data,
+      }),
+      invalidatesTags: ['FutureIdentity', 'Timeline'],
+    }),
+
+    updateFutureIdentity: builder.mutation<FutureIdentity, Partial<CreateFutureIdentityRequest>>({
+      query: (data) => ({
+        url: '/api/kid/future-identity',
+        method: 'PUT',
+        body: data,
+      }),
+      invalidatesTags: ['FutureIdentity'],
+    }),
+
+    getTimelineStatus: builder.query<TimelineStatus, void>({
+      query: () => '/api/kid/timeline/status',
+      providesTags: ['Timeline'],
+    }),
+
+    getAchievements: builder.query<Achievement[], void>({
+      query: () => '/api/kid/achievements',
+      providesTags: ['Achievements'],
+    }),
+
+    getMilestones: builder.query<TimelineMilestone[], { limit?: number }>({
+      query: ({ limit = 20 }) => `/api/kid/timeline/milestones?limit=${limit}`,
+      providesTags: ['Timeline'],
+    }),
+
+    recalculateTimeline: builder.mutation<TimelineStatus, void>({
+      query: () => ({
+        url: '/api/kid/timeline/recalculate',
+        method: 'POST',
+      }),
+      invalidatesTags: ['Timeline'],
+    }),
   }),
 });
 
@@ -231,4 +283,13 @@ export const {
   useGetParentChatSessionsQuery,
   useGetParentChatSessionQuery,
   useLazyGetParentChatSessionQuery,
+  useGetFutureIdentityQuery,
+  useLazyGetFutureIdentityQuery,
+  useCreateFutureIdentityMutation,
+  useUpdateFutureIdentityMutation,
+  useGetTimelineStatusQuery,
+  useLazyGetTimelineStatusQuery,
+  useGetAchievementsQuery,
+  useGetMilestonesQuery,
+  useRecalculateTimelineMutation,
 } = apiSlice;
